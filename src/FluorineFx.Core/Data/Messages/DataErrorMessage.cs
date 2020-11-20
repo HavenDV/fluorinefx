@@ -28,7 +28,6 @@ namespace FluorineFx.Data.Messages
 	/// </summary>
 	class DataErrorMessage : ErrorMessage
 	{
-		public DataMessage cause;
 		public object serverObject;
 		public IList propertyNames;
 
@@ -54,7 +53,7 @@ namespace FluorineFx.Data.Messages
         {
             string sep = GetFieldSeparator(indentLevel);
             string value = base.ToStringFields(indentLevel);
-            value += sep + "cause = " + (cause != null ? cause.ToString(indentLevel) : null);
+            value += sep + "cause = " + null;
             value += sep + "serverObject = " + serverObject;
             value += sep + "propertyNames = " + BodyToString(propertyNames, indentLevel);
             return value;

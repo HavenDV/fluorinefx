@@ -591,28 +591,5 @@ namespace FluorineFx.Threading
 			Thread.Sleep(5);
 #endif
 		}
-
-        private static ThreadPoolEx GlobalThreadPool;
-
-        /// <summary>
-        /// Gets the global ThreadPoolEx instance.
-        /// </summary>
-        public static ThreadPoolEx Global
-        {
-            get
-            {
-                if (GlobalThreadPool == null)
-                {
-                    lock (typeof(ThreadPoolEx))
-                    {
-                        if (GlobalThreadPool == null)
-                        {
-                            GlobalThreadPool = new ThreadPoolEx(DefaultIdleTimeout, FluorineConfiguration.Instance.FluorineSettings.Runtime.MaxWorkerThreads, FluorineConfiguration.Instance.FluorineSettings.Runtime.MinWorkerThreads);
-                        }
-                    }
-                }
-                return GlobalThreadPool;
-            }
-        }
 	}
 }
