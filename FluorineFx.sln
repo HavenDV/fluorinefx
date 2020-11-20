@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30711.63
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluorineFx", "src\FluorineFx\FluorineFx.csproj", "{A9B8375B-579D-4F8A-B00C-F2828DB58F3A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluorineFx.Core", "src\FluorineFx.Core\FluorineFx.Core.csproj", "{FC5A7E44-0393-458D-8E32-C741D49A9421}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluorineFx.Client", "src\FluorineFx.Client\FluorineFx.Client.csproj", "{FC5A7E44-0393-458D-8E32-C741D49A9421}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{129BAFF8-2CCA-405D-99B7-148ADDF25A41}"
 	ProjectSection(SolutionItems) = preProject
