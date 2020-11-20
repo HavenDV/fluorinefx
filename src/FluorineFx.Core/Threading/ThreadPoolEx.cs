@@ -544,7 +544,9 @@ namespace FluorineFx.Threading
 					{
 						try 
 						{
+#if !NET5_0
 							thread.Abort("Shutdown");
+#endif
 						}
 						catch(SecurityException)
 						{

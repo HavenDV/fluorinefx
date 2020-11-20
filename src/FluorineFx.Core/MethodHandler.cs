@@ -148,7 +148,6 @@ namespace FluorineFx
                         Log.Error("Displaying verbose logging information");
                         try
                         {
-                            new FileIOPermission(PermissionState.Unrestricted);
                             Log.Error(string.Format("Reflected type was '{0}' location of the loaded file {1}", type.AssemblyQualifiedName, type.Assembly.Location));
                         }
                         catch (SecurityException)

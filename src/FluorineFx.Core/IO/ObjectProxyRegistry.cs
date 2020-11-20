@@ -89,7 +89,7 @@ namespace FluorineFx.IO
             _registeredProxies.Add(typeof(Exception), new ExceptionProxy());
             //_registeredProxies.Add(typeof(System.Data.Objects.DataClasses.EntityObject), new EntityObjectProxy());
 #if !(NET_1_1) && !(NET_2_0) && !(SILVERLIGHT)
-			_registeredProxies.Add(typeof(System.Data.Objects.DataClasses.StructuralObject), new EntityObjectProxy());
+			//_registeredProxies.Add(typeof(System.Data.Objects.DataClasses.StructuralObject), new EntityObjectProxy());
 #endif
         }
 

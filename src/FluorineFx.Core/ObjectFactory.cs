@@ -57,12 +57,8 @@ namespace FluorineFx
             _typeConstructorCache = new CopyOnWriteDictionary<Type, ConstructorInvoker>();
             try
             {
-#pragma warning disable 618
-                new ReflectionPermission(ReflectionPermissionFlag.ReflectionEmit).Demand();
-#pragma warning restore 618
                 new ReflectionPermission(ReflectionPermissionFlag.MemberAccess).Demand();
                 new ReflectionPermission(ReflectionPermissionFlag.RestrictedMemberAccess).Demand();
-                new SecurityPermission(SecurityPermissionFlag.UnmanagedCode).Demand();
                 _reflectionEmitPermission = true;
             }
             catch(Exception ex)

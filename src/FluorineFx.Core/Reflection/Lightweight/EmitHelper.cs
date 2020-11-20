@@ -152,26 +152,6 @@ namespace FluorineFx.Reflection.Lightweight
 		}
 
 		/// <summary>
-		/// Marks a sequence point in the Microsoft intermediate language (MSIL) stream.
-		/// </summary>
-		/// <param name="document">The document for which the sequence point is being defined.</param>
-		/// <param name="startLine">The line where the sequence point begins.</param>
-		/// <param name="startColumn">The column in the line where the sequence point begins.</param>
-		/// <param name="endLine">The line where the sequence point ends.</param>
-		/// <param name="endColumn">The column in the line where the sequence point ends.</param>
-		/// <returns>Current instance of the EmitHelper.</returns>
-		public EmitHelper MarkSequencePoint(
-			ISymbolDocumentWriter document,
-			int startLine,
-			int startColumn,
-			int endLine,
-			int endColumn)
-		{
-			_ilGenerator.MarkSequencePoint(document, startLine, startColumn, endLine, endColumn);
-			return this;
-		}
-
-		/// <summary>
 		/// Emits an instruction to throw an exception.
 		/// </summary>
 		/// <param name="exceptionType">The class of the type of exception to throw.</param>

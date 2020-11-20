@@ -549,7 +549,7 @@ namespace FluorineFx.IO
             WriteDouble((double)milliSeconds);
 
 #if !SILVERLIGHT
-            span = TimeZone.CurrentTimeZone.GetUtcOffset(value);
+            span = TimeZoneInfo.Local.GetUtcOffset(value);
 			//whatever we write back, it is ignored
 			//this.WriteLong(span.TotalMinutes);
 			//this.WriteShort((int)span.TotalHours);

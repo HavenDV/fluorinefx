@@ -169,7 +169,7 @@ namespace FluorineFx.Expression
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = expr_AST;
@@ -199,7 +199,7 @@ namespace FluorineFx.Expression
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = expression_AST;
@@ -252,7 +252,7 @@ _loop5_breakloop:				;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = logicalOrExpression_AST;
@@ -305,7 +305,7 @@ _loop8_breakloop:				;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = logicalAndExpression_AST;
@@ -511,7 +511,7 @@ _loop8_breakloop:				;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = relationalExpression_AST;
@@ -580,7 +580,7 @@ _loop14_breakloop:				;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = sumExpr_AST;
@@ -674,7 +674,7 @@ _loop14_breakloop:				;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = relationalOperator_AST;
@@ -729,7 +729,7 @@ _loop38_breakloop:				;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = listInitializer_AST;
@@ -772,7 +772,7 @@ _loop38_breakloop:				;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = betweenExpr_AST;
@@ -840,7 +840,7 @@ _loop38_breakloop:				;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = pattern_AST;
@@ -922,7 +922,7 @@ _loop18_breakloop:				;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = prodExpr_AST;
@@ -973,7 +973,7 @@ _loop18_breakloop:				;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = powExpr_AST;
@@ -1052,7 +1052,7 @@ _loop18_breakloop:				;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = unaryExpression_AST;
@@ -1132,7 +1132,7 @@ _loop18_breakloop:				;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = primaryExpression_AST;
@@ -1164,7 +1164,7 @@ _loop18_breakloop:				;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = parenExpr_AST;
@@ -1261,7 +1261,7 @@ _loop18_breakloop:				;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = literal_AST;
@@ -1327,7 +1327,7 @@ _loop18_breakloop:				;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = functionOrVar_AST;
@@ -1362,7 +1362,7 @@ _loop18_breakloop:				;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = function_AST;
@@ -1391,7 +1391,7 @@ _loop18_breakloop:				;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = var_AST;
@@ -1455,7 +1455,7 @@ _loop33_breakloop:						;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = methodArgs_AST;
@@ -1485,7 +1485,7 @@ _loop33_breakloop:						;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = argument_AST;
@@ -1529,7 +1529,7 @@ _loop33_breakloop:						;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = boolLiteral_AST;
@@ -1581,7 +1581,7 @@ _loop33_breakloop:						;
 			}
 			else
 			{
-				throw ex;
+				throw;
 			}
 		}
 		returnAST = dateLiteral_AST;
