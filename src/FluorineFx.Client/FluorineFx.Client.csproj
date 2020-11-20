@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net40;net45;netcoreapp31;net5</TargetFrameworks>
+    <TargetFrameworks>net40;net45;netstandard21;netcoreapp31;net5</TargetFrameworks>
     <LangVersion>preview</LangVersion>
     <DefineConstants>$(DefineConstants);FXCLIENT</DefineConstants>
   </PropertyGroup>
@@ -45,6 +45,12 @@
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Messaging" />
     <Reference Include="System.Web.Services" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard21'">
+    <PackageReference Include="System.CodeDom">
+      <Version>5.0.0</Version>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp31'">
