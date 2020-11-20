@@ -90,6 +90,7 @@ namespace FluorineFx.IO
 #if !FXCLIENT
 				(FluorineConfiguration.Instance.OptimizerSettings != null && FluorineConfiguration.Instance.FullTrust) ? (IAMFReader)(new  AMF0OptimizedObjectReader()) : (IAMFReader)(new AMF0ObjectReader()), /*16*/
 #else
+                new AMF0ObjectReader(), /*16*/
 #endif
 				new AMF0AMF3TagReader() /*17*/
 			};
@@ -477,9 +478,25 @@ namespace FluorineFx.IO
 			if(tmp > 720)
 				tmp = (65536 - tmp);
 			int tz = tmp / 60;
-            date = date.ToLocalTime();
+			switch(FluorineConfiguration.Instance.TimezoneCompensation)
+			{
+				case TimezoneCompensation.None:
+					break;
+				case TimezoneCompensation.Auto:
+					date = date.AddHours(tz);
+#if !(NET_1_1)
+                    date = DateTime.SpecifyKind(date, DateTimeKind.Unspecified);
+#endif								
+					//if(TimeZone.CurrentTimeZone.IsDaylightSavingTime(date))
+					//	date = date.AddMilliseconds(-3600000);
+                    break;
+                case TimezoneCompensation.Server:
+                    //Convert to local time
+                    date = date.ToLocalTime();
+                    break;
+			}
 
-            return date;
+			return date;
 		}
  
 #if !SILVERLIGHT
@@ -615,7 +632,19 @@ namespace FluorineFx.IO
 #if !(NET_1_1)
                 date = DateTime.SpecifyKind(date, DateTimeKind.Utc);
 #endif
-                date = date.ToLocalTime();
+				switch(FluorineConfiguration.Instance.TimezoneCompensation)
+				{
+					case TimezoneCompensation.None:
+                        //No conversion by default
+						break;
+					case TimezoneCompensation.Auto:
+						//Not applicable for AMF3
+						break;
+                    case TimezoneCompensation.Server:
+                        //Convert to local time
+                        date = date.ToLocalTime();
+                        break;
+                }
                 AddAMF3ObjectReference(date);
 				return date;
 			}

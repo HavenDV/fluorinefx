@@ -64,7 +64,8 @@ namespace FluorineFx.IO.Bytecode.Lightweight
 
         protected virtual ReadDataInvoker CreateReadDataMethod(Type type, AMFReader reader, object instance)
         {
-            DynamicMethod method = new DynamicMethod(string.Empty, typeof(object), new Type[] { typeof(AMFReader), typeof(ClassDefinition) }, this.GetType(), true);
+            bool canSkipChecks = SecurityManager.IsGranted(new ReflectionPermission(ReflectionPermissionFlag.MemberAccess));
+            DynamicMethod method = new DynamicMethod(string.Empty, typeof(object), new Type[] { typeof(AMFReader), typeof(ClassDefinition) }, this.GetType(), canSkipChecks);
             ILGenerator il = method.GetILGenerator();
 
             LocalBuilder instanceLocal = il.DeclareLocal(type);//[0] instance

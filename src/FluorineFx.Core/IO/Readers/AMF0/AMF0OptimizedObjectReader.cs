@@ -80,6 +80,9 @@ namespace FluorineFx.IO.Readers
 								if( FluorineConfiguration.Instance.OptimizerSettings != null )
 									bytecodeProvider = new FluorineFx.IO.Bytecode.CodeDom.BytecodeProvider();
 #else
+								if (FluorineConfiguration.Instance.OptimizerSettings.Provider == "codedom")
+									bytecodeProvider = new FluorineFx.IO.Bytecode.CodeDom.BytecodeProvider();
+								if (FluorineConfiguration.Instance.OptimizerSettings.Provider == "il")
 									bytecodeProvider = new FluorineFx.IO.Bytecode.Lightweight.BytecodeProvider();
 #endif
 

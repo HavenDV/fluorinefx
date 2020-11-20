@@ -550,11 +550,11 @@ namespace FluorineFx.IO
 
 #if !SILVERLIGHT
             span = TimeZoneInfo.Local.GetUtcOffset(value);
-			//whatever we write back, it is ignored
-			//this.WriteLong(span.TotalMinutes);
-			//this.WriteShort((int)span.TotalHours);
-			//this.WriteShort(65236);
-			if( FluorineConfiguration.Instance.TimezoneCompensation == TimezoneCompensation.None )
+            //whatever we write back, it is ignored
+            //this.WriteLong(span.TotalMinutes);
+            //this.WriteShort((int)span.TotalHours);
+            //this.WriteShort(65236);
+            if ( FluorineConfiguration.Instance.TimezoneCompensation == TimezoneCompensation.None )
 				this.WriteShort(0);
 			else
 				this.WriteShort((int)(span.TotalMilliseconds/60000));
