@@ -1,0 +1,12 @@
+<Project>
+
+  <PropertyGroup Label="Common">
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Signing">
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)\src\key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  
+</Project>

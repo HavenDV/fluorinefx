@@ -2,32 +2,14 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;net4.0;net4.5</TargetFrameworks>
-    <LangVersion>preview</LangVersion>
     <DefineConstants>$(DefineConstants);FXCLIENT</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Label="Signing">
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-
   <PropertyGroup Label="Nuget">
-    <Version>1.2.7</Version>
-    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Authors>Zoltan Csibi, zoltan@TheSilentGroup.com, FluorineFx.com</Authors>
-    <Company>Zoltan Csibi, zoltan@TheSilentGroup.com, FluorineFx.com</Company>
+    <Version>1.2.8</Version>
     <Description>fluorinefx Client with .Net Standard 2.1 support</Description>
-    <PackageId>fluorinefx.Client</PackageId>
-    <PackageProjectUrl>https://github.com/HavenDV/fluorinefx</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/HavenDV/fluorinefx</RepositoryUrl>
     <PackageTags>fluorinefx, netcore, net 5</PackageTags>
     <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
-    <PackageLicenseFile></PackageLicenseFile>
-    <Copyright>Zoltan Csibi, zoltan@TheSilentGroup.com, FluorineFx.com</Copyright>
-    <RepositoryType>git</RepositoryType>
-    <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
