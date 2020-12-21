@@ -21,7 +21,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 using log4net;
 #endif
 using FluorineFx.Util;
@@ -52,10 +52,10 @@ namespace FluorineFx.IO.Mp4
     /// </summary>
     class Mp4Atom
     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
         private static readonly ILog log = LogManager.GetLogger(typeof(Mp4Atom));
 #endif
-        
+
         public readonly static int MP4AudioSampleEntryAtomType = Mp4Atom.TypeToInt("mp4a");
         
         public readonly static int MP4ChunkLargeOffsetAtomType = Mp4Atom.TypeToInt("co64");
@@ -241,7 +241,7 @@ namespace FluorineFx.IO.Mp4
             {
                 bytesRead = atom.create_pasp_atom(bitstream);
             }
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("Atom: type = {0} size = {1}", IntToType(type), size));
 #endif
             bitstream.SkipBytes(size - bytesRead);
@@ -317,23 +317,23 @@ namespace FluorineFx.IO.Mp4
         public long create_audio_sample_entry_atom(Mp4DataStream bitstream)
         {
             //qtff page 117
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug("Audio sample entry");
 #endif
             bitstream.SkipBytes(6);
             int dataReferenceIndex = (int)bitstream.ReadBytes(2);
             bitstream.SkipBytes(8);
             channelCount = (int)bitstream.ReadBytes(2);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("Channels: {0}", channelCount));
 #endif
             sampleSize = (int)bitstream.ReadBytes(2);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("Sample size (bits): {0}", sampleSize));
 #endif
             bitstream.SkipBytes(4);
             timeScale = (int)bitstream.ReadBytes(2);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("Time scale: {0}", timeScale));
 #endif
             bitstream.SkipBytes(2);
@@ -416,7 +416,7 @@ namespace FluorineFx.IO.Mp4
             _bytesRead += 20;
             int length = (int)(_size - _bytesRead - 1);
             String trackName = bitstream.ReadString(length);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("Track name: {0}", trackName));
 #endif
             _bytesRead += length;
@@ -523,7 +523,7 @@ namespace FluorineFx.IO.Mp4
         {
             create_full_atom(bitstream);
             entryCount = (int)bitstream.ReadBytes(4);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("stsd entry count: {0}", entryCount));
 #endif
             _bytesRead += 4;
@@ -694,12 +694,12 @@ namespace FluorineFx.IO.Mp4
         /// <returns>The number of bytes loaded.</returns>
         public long create_sync_sample_atom(Mp4DataStream bitstream)
         {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug("Sync sample atom contains keyframe info");
 #endif
             create_full_atom(bitstream);
             entryCount = (int)bitstream.ReadBytes(4);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("Sync entries: {0}", entryCount));
 #endif
             _bytesRead += 4;
@@ -748,12 +748,12 @@ namespace FluorineFx.IO.Mp4
         /// <returns>The number of bytes loaded.</returns>
         public long create_time_to_sample_atom(Mp4DataStream bitstream)
         {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug("Time to sample atom");
 #endif
             create_full_atom(bitstream);
             entryCount = (int)bitstream.ReadBytes(4);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("Time to sample entries: {0}", entryCount));
 #endif
             _bytesRead += 4;
@@ -796,7 +796,7 @@ namespace FluorineFx.IO.Mp4
         public long create_track_header_atom(Mp4DataStream bitstream)
         {
             create_full_atom(bitstream);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("Version: {0}", version));
 #endif
             if (version == 1)
@@ -821,7 +821,7 @@ namespace FluorineFx.IO.Mp4
             int qt_layer = (int)bitstream.ReadBytes(2);
             int qt_alternateGroup = (int)bitstream.ReadBytes(2);
             int qt_volume = (int)bitstream.ReadBytes(2);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("Volume: {0}", qt_volume));
 #endif
             bitstream.SkipBytes(2); //reserved by Apple
@@ -876,16 +876,16 @@ namespace FluorineFx.IO.Mp4
         /// <returns>The number of bytes loaded.</returns>
         public long create_visual_sample_entry_atom(Mp4DataStream bitstream)
         {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug("Visual entry atom contains wxh");
 #endif
             bitstream.SkipBytes(24);
             width = (int)bitstream.ReadBytes(2);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("Width: {0}", width));
 #endif
             height = (int)bitstream.ReadBytes(2);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("Height: {0}", height));
 #endif
             bitstream.SkipBytes(50);
@@ -902,7 +902,7 @@ namespace FluorineFx.IO.Mp4
         /// <returns>The number of bytes loaded.</returns>
         public long create_video_sample_entry_atom(Mp4DataStream bitstream)
         {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug("Video entry atom contains wxh");
 #endif
             bitstream.SkipBytes(6);
@@ -911,41 +911,41 @@ namespace FluorineFx.IO.Mp4
             bitstream.SkipBytes(2);
             bitstream.SkipBytes(12);
             width = (int)bitstream.ReadBytes(2);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("Width: {0}", width));
 #endif
             height = (int)bitstream.ReadBytes(2);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("Height: {0}", height));
 #endif
             int horizontalRez = (int)bitstream.ReadBytes(4) >> 16;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("H Resolution: {0}", horizontalRez));
 #endif
             int verticalRez = (int)bitstream.ReadBytes(4) >> 16;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("V Resolution: {0}", verticalRez));
 #endif
             bitstream.SkipBytes(4);
             int frameCount = (int)bitstream.ReadBytes(2);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("Frame to sample count: {0}", frameCount));
 #endif
             int stringLen = (int)bitstream.ReadBytes(1);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("String length (cpname): {0}", stringLen));
 #endif
             String compressorName = bitstream.ReadString(31);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("Compressor name: {0}", compressorName.Trim()));
 #endif
             int depth = (int)bitstream.ReadBytes(2);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("Depth: {0}", depth));
 #endif
             bitstream.SkipBytes(2);
             _bytesRead += 78;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("Bytes read: {0}", _bytesRead));
 #endif
             Mp4Atom child = Mp4Atom.CreateAtom(bitstream);
@@ -1008,7 +1008,7 @@ namespace FluorineFx.IO.Mp4
         /// <returns>The number of bytes loaded.</returns>
         public long create_avc_config_atom(Mp4DataStream bitstream)
         {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug("AVC config");
             log.Debug(string.Format("Offset: {0}", bitstream.Offset));
 #endif
@@ -1022,19 +1022,19 @@ namespace FluorineFx.IO.Mp4
                     //0 / version
                     case 1: //profile
                         avcProfile = videoConfigBytes[b];
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                         log.Debug(string.Format("AVC profile: {0}", avcProfile));
 #endif
                         break;
                     case 2: //compatible profile
                         int avcCompatProfile = videoConfigBytes[b];
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                         log.Debug(string.Format("AVC compatible profile: {0}", avcCompatProfile));
 #endif
                         break;
                     case 3: //avc level
                         avcLevel = videoConfigBytes[b];
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                         log.Debug(string.Format("AVC level: {0}", avcLevel));
 #endif
                         break;
@@ -1042,7 +1042,7 @@ namespace FluorineFx.IO.Mp4
                         break;
                     case 5: //SPS number
                         int numberSPS = videoConfigBytes[b];
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                         log.Debug(string.Format("Number of SPS: {0}", numberSPS));
 #endif
                         break;
@@ -1062,12 +1062,12 @@ namespace FluorineFx.IO.Mp4
         /// <returns>The number of bytes loaded.</returns>
         public long create_pasp_atom(Mp4DataStream bitstream)
         {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug("Pixel aspect ratio");
 #endif
             int hSpacing = (int)bitstream.ReadBytes(4);
             int vSpacing = (int)bitstream.ReadBytes(4);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("hSpacing: {0} vSpacing: {1}", hSpacing, vSpacing));
 #endif
             _bytesRead += 8;

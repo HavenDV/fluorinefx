@@ -20,7 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 using log4net;
 #endif
 using FluorineFx.Util;
@@ -33,7 +33,7 @@ namespace FluorineFx.IO.FLV
     /// </summary>
     class FlvWriter : ITagWriter
     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
         private static readonly ILog log = LogManager.GetLogger(typeof(FlvWriter));
 #endif
         object _syncLock = new object();
@@ -106,21 +106,21 @@ namespace FluorineFx.IO.FLV
                                 _duration = System.Convert.ToInt32(properties["duration"]);
                             else
                             {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                 log.Warn("Could not read Flv duration from metadata");
 #endif
                             }
                         }
                         else
                         {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                             log.Warn("Could not read Flv duration");
 #endif
                         }
                     }
                     catch (Exception ex)
                     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                         log.Warn("Error reading Flv duration", ex);
 #endif
                     }
@@ -236,7 +236,7 @@ namespace FluorineFx.IO.FLV
             }
             catch (IOException ex)
             {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                 log.Error("FlvWriter close", ex);
 #endif
             }

@@ -18,7 +18,7 @@
 */
 using System;
 using System.Reflection;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 using log4net;
 #endif
 
@@ -29,7 +29,7 @@ namespace FluorineFx.Invocation
 	/// </summary>
 	class InvocationHandler
 	{
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
         private static readonly ILog log = LogManager.GetLogger(typeof(InvocationHandler));
 #endif
 		MethodInfo _methodInfo;
@@ -44,7 +44,7 @@ namespace FluorineFx.Invocation
 
 		public object Invoke(object obj, object[] arguments)
 		{
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             if( log.IsDebugEnabled )
 				log.Debug(__Res.GetString(__Res.Invoke_Method, _methodInfo.DeclaringType.FullName + "." + _methodInfo.Name));
 #endif

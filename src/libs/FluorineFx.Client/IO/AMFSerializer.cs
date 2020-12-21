@@ -20,7 +20,7 @@
 using System;
 using System.Collections;
 using System.IO;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 using log4net;
 #endif
 using FluorineFx.Messaging;
@@ -33,15 +33,15 @@ namespace FluorineFx.IO
 	/// </summary>
 	public class AMFSerializer : AMFWriter
 	{
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
         private static readonly ILog log = LogManager.GetLogger(typeof(AMFSerializer));
 #endif
 
-		/// <summary>
-		/// Initializes a new instance of the AMFSerializer class.
-		/// </summary>
-		/// <param name="stream"></param>
-		public AMFSerializer(Stream stream) : base(stream)
+        /// <summary>
+        /// Initializes a new instance of the AMFSerializer class.
+        /// </summary>
+        /// <param name="stream"></param>
+        public AMFSerializer(Stream stream) : base(stream)
 		{
 		}
         /// <summary>
@@ -91,7 +91,7 @@ namespace FluorineFx.IO
                                 this.BaseStream.Seek(position, SeekOrigin.Begin);
                                 //this.BaseStream.Position = position;
 
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                 if (log.IsFatalEnabled)
                                     log.Fatal(__Res.GetString(__Res.Amf_SerializationFail), exception);
 #endif
@@ -114,7 +114,7 @@ namespace FluorineFx.IO
                                 {
                                     errorResponseBody.WriteBody(amfMessage.ObjectEncoding, this);
                                 }
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                 catch (Exception exception2)
                                 {
                                     if (log.IsFatalEnabled)
@@ -140,7 +140,7 @@ namespace FluorineFx.IO
                     }
 				}
 			}
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 			catch(Exception exception)
 			{
                 if( log.IsFatalEnabled )

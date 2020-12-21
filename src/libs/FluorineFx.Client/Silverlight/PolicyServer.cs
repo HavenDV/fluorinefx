@@ -20,13 +20,17 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+#if LOGGING
 using log4net;
+#endif
 
 namespace FluorineFx.Silverlight
 {
     class PolicyConnection
     {
+#if LOGGING
         private static readonly ILog log = LogManager.GetLogger(typeof(PolicyServer));
+#endif
 
         private PolicyServer _policyServer;
         private Socket _connection;
@@ -59,14 +63,18 @@ namespace FluorineFx.Silverlight
             }
             catch (SocketException ex)
             {
+#if LOGGING
                 if (log.IsDebugEnabled)
                     log.Debug("Socket exception", ex);
+#endif
                 _connection.Close();
             }
             catch (Exception ex)
             {
+#if LOGGING
                 if (log.IsErrorEnabled)
                     log.Error("Failed starting a policy connection", ex);
+#endif
             }
         }
 
@@ -74,14 +82,18 @@ namespace FluorineFx.Silverlight
         {
             try
             {
+#if LOGGING
                 if (log.IsDebugEnabled)
                     log.Debug("Policy connection receiving request");
+#endif
 
                 _received += _connection.EndReceive(res);
                 if (_received < _policyRequestString.Length)
                 {
+#if LOGGING
                     if (log.IsDebugEnabled)
                         log.Debug(string.Format("Policy connection received partial request: {0} bytes", _received));
+#endif
 
                     _connection.BeginReceive(_buffer, _received, _policyRequestString.Length - _received, SocketFlags.None, new AsyncCallback(OnReceive), null);
                     return;
@@ -93,16 +105,20 @@ namespace FluorineFx.Silverlight
 				if (request != _policyRequestString)
 #endif
                 {
+#if LOGGING
                     if (log.IsDebugEnabled)
                         log.Debug(string.Format("Policy connection could not handle request: {0}", request));
+#endif
 
                     _policyServer.RaiseDisconnect(_endpoint);
                     _connection.Close();
                     return;
                 }
-                // Sending the policy                
+                // Sending the policy    
+#if LOGGING
                 if (log.IsDebugEnabled)
                     log.Debug("Policy connection sending policy stream");
+#endif
                 _connection.BeginSend(_policy, 0, _policy.Length, SocketFlags.None, new AsyncCallback(OnSend), null);
             }
             catch (ObjectDisposedException)
@@ -112,16 +128,22 @@ namespace FluorineFx.Silverlight
             }
             catch (SocketException ex)
             {
+
+#if LOGGING
                 if (log.IsDebugEnabled)
                     log.Debug("Socket exception", ex);
+#endif
 
                 _policyServer.RaiseDisconnect(_endpoint);
                 _connection.Close();
             }
             catch (Exception ex)
             {
+
+#if LOGGING
                 if (log.IsErrorEnabled)
                     log.Error("Policy connection failed", ex);
+#endif
             }
         }
 
@@ -138,14 +160,19 @@ namespace FluorineFx.Silverlight
             }
             catch (SocketException ex)
             {
+#if LOGGING
                 if (log.IsDebugEnabled)
                     log.Debug("Socket exception", ex);
+#endif
                 _connection.Close();
             }
             catch (Exception ex)
             {
+
+#if LOGGING
                 if (log.IsErrorEnabled)
                     log.Error("Policy connection failed", ex);
+#endif
             }
             finally
             {
@@ -195,7 +222,9 @@ namespace FluorineFx.Silverlight
     /// </summary>
     public class PolicyServer
     {
+#if LOGGING
         private static readonly ILog log = LogManager.GetLogger(typeof(PolicyServer));
+#endif
 
         private Socket _listener;
         private byte[] _policy;
@@ -224,8 +253,10 @@ namespace FluorineFx.Silverlight
             // Load the policy file            
             try
             {
+#if LOGGING
 	            if (log.IsDebugEnabled)
                     log.Debug("Starting FluorineFx Silverlight Policy Server");
+#endif
 				
                 FileStream policyStream = new FileStream(policyFile, FileMode.Open);
                 _policy = new byte[policyStream.Length];
@@ -237,13 +268,18 @@ namespace FluorineFx.Silverlight
                 _listener.Bind(new IPEndPoint(IPAddress.Any, 943));
                 _listener.Listen(10);
                 _listener.BeginAccept(new AsyncCallback(OnConnection), null);
+
+#if LOGGING
                 if (log.IsDebugEnabled)
                     log.Debug("Started FluorineFx Silverlight Policy Server");
+#endif
             }
             catch (Exception ex)
             {
+#if LOGGING
                 if (log.IsErrorEnabled)
                     log.Error("Error starting FluorineFx Silverlight Policy Server", ex);
+#endif
             }
         }
 
@@ -258,8 +294,10 @@ namespace FluorineFx.Silverlight
             }
             catch (SocketException ex)
             {
+#if LOGGING
                 if (log.IsDebugEnabled)
                     log.Debug("Socket exception", ex);
+#endif
                 return;
             }
             catch (ObjectDisposedException)
@@ -276,13 +314,18 @@ namespace FluorineFx.Silverlight
             {
                 if (_listener != null)
                     _listener.Close();
+#if LOGGING
                 if (log.IsDebugEnabled)
                     log.Debug("Stopped FluorineFx Silverlight Policy Server");
+#endif
+                
             }
             catch (Exception ex)
             {
+#if LOGGING
                 if (log.IsErrorEnabled)
                     log.Error("Error stopping FluorineFx Silverlight Policy Server", ex);
+#endif
             }
         }
 
@@ -297,8 +340,10 @@ namespace FluorineFx.Silverlight
             }
             catch (Exception ex)
             {
+#if LOGGING
                 if (log.IsErrorEnabled)
                     log.Error("RaiseDisconnect exception", ex);
+#endif
             }
         }
     }

@@ -24,9 +24,9 @@ using System.Reflection;
 using System.Text;
 using System.Xml;
 using Microsoft.CSharp;
-
+#if LOGGING
 using log4net;
-
+#endif
 using FluorineFx.AMF3;
 using FluorineFx.Exceptions;
 using FluorineFx.Configuration;
@@ -39,13 +39,14 @@ namespace FluorineFx.IO.Bytecode.CodeDom
 	/// </summary>
 	class BytecodeProvider : IBytecodeProvider
 	{
+#if LOGGING
 		private static readonly ILog log = LogManager.GetLogger(typeof(BytecodeProvider));
-
+#endif
 		public BytecodeProvider()
 		{
 		}
 
-		#region IBytecodeProvider Members
+#region IBytecodeProvider Members
 
 
         public IReflectionOptimizer GetReflectionOptimizer(Type type, ClassDefinition classDefinition, AMFReader reader, object instance)
@@ -56,7 +57,7 @@ namespace FluorineFx.IO.Bytecode.CodeDom
                 return new AMF3ReflectionOptimizer(type, classDefinition, reader).Generate(instance);
         }
 
-		#endregion
+#endregion
 
 	}
 }

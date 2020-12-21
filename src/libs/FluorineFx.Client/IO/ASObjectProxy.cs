@@ -19,7 +19,7 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 using System.Text;
 using log4net;
 #endif
@@ -30,7 +30,7 @@ namespace FluorineFx.IO
 {
     class ASObjectProxy : IObjectProxy
     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
         private static readonly ILog log = LogManager.GetLogger(typeof(ASObjectProxy));
 #endif
 
@@ -76,8 +76,10 @@ namespace FluorineFx.IO
                     string customClassName = string.Empty;
                     classDefinition = new ClassDefinition(customClassName, ClassDefinition.EmptyClassMembers, false, true);
                 }
+#if LOGGING
                 if (log.IsDebugEnabled)
                     log.Debug(string.Format("Creating class definition for AS object {0}", aso));
+#endif
                 return classDefinition;
             }
             throw new ArgumentException();
@@ -91,10 +93,12 @@ namespace FluorineFx.IO
                 if (aso.ContainsKey(member.Name))
                     return aso[member.Name];
                 string msg = __Res.GetString(__Res.Reflection_MemberNotFound, string.Format("ASObject[{0}]", member.Name));
+#if LOGGING
                 if (log.IsDebugEnabled)
                 {
                     log.Debug(string.Format("Member {0} not found in AS object {1}", member.Name, aso));
                 }
+#endif
                 throw new FluorineException(msg);
             }
             throw new ArgumentException();
@@ -110,6 +114,6 @@ namespace FluorineFx.IO
             throw new ArgumentException();
         }
 
-        #endregion
+#endregion
     }
 }

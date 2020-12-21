@@ -18,8 +18,9 @@
 */
 using System;
 using System.Collections;
-
+#if LOGGING
 using log4net;
+#endif
 using FluorineFx.Configuration;
 using FluorineFx.AMF3;
 using FluorineFx.IO.Bytecode;
@@ -31,8 +32,9 @@ namespace FluorineFx.IO.Readers
 	/// </summary>
 	class AMF3OptimizedObjectReader : IAMFReader
 	{
-        private static readonly ILog _log = LogManager.GetLogger(typeof(AMF3OptimizedObjectReader));
-
+#if LOGGING
+		private static readonly ILog _log = LogManager.GetLogger(typeof(AMF3OptimizedObjectReader));
+#endif
         Hashtable _optimizedReaders;
 
 		public AMF3OptimizedObjectReader()
@@ -40,7 +42,7 @@ namespace FluorineFx.IO.Readers
             _optimizedReaders = new Hashtable();
 		}
 
-		#region IAMFReader Members
+#region IAMFReader Members
 
 		public object ReadData(AMFReader reader)
 		{
@@ -129,12 +131,12 @@ namespace FluorineFx.IO.Readers
 			}
 		}
 
-		#endregion
+#endregion
 	}
 
     class AMF3TempObjectReader : IReflectionOptimizer
     {
-        #region IReflectionOptimizer Members
+#region IReflectionOptimizer Members
 
         public object CreateInstance()
         {
@@ -147,6 +149,6 @@ namespace FluorineFx.IO.Readers
             return obj;
         }
 
-        #endregion
+#endregion
     }
 }

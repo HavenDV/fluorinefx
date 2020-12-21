@@ -21,6 +21,8 @@ using System.Reflection;
 using System.Collections.Generic;
 #if !SILVERLIGHT
 using System.Text;
+#endif
+#if LOGGING
 using log4net;
 #endif
 using FluorineFx.AMF3;
@@ -33,7 +35,7 @@ namespace FluorineFx.IO
 {
     class ObjectProxy : IObjectProxy
     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
         private static readonly ILog log = LogManager.GetLogger(typeof(ObjectProxy));
 #endif
 
@@ -71,7 +73,7 @@ namespace FluorineFx.IO
                 {
                     //The gateway will not be able to access this property
                     string msg = __Res.GetString(__Res.Reflection_PropertyIndexFail, string.Format("{0}.{1}", type.FullName, propertyInfo.Name));
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                     if (log.IsWarnEnabled)
                         log.Warn(msg);
 #endif

@@ -25,7 +25,9 @@ using System.Text;
 using System.Xml;
 using Microsoft.CSharp;
 
+#if LOGGING
 using log4net;
+#endif
 
 using FluorineFx.Exceptions;
 using FluorineFx.Configuration;
@@ -38,7 +40,9 @@ namespace FluorineFx.IO.Bytecode.CodeDom
 	/// </summary>
 	class AMF0ReflectionOptimizer
 	{
+#if LOGGING
 		private static readonly ILog log = LogManager.GetLogger(typeof(AMF0ReflectionOptimizer));
+#endif
 
 		private CompilerParameters _cp = new CompilerParameters();
         protected Type _mappedClass;
@@ -122,7 +126,9 @@ namespace FluorineFx.IO.Bytecode.CodeDom
 				StreamWriter sw = File.CreateText( file);
 				sw.Write(code);
 				sw.Close();
-                log.Debug(__Res.GetString(__Res.Optimizer_FileLocation, _mappedClass.FullName, file));
+#if LOGGING
+				log.Debug(__Res.GetString(__Res.Optimizer_FileLocation, _mappedClass.FullName, file));
+#endif
 
 				_cp.TempFiles = new TempFileCollection(Path.GetTempPath());
 				_cp.TempFiles.KeepFiles = true;
@@ -149,7 +155,9 @@ namespace FluorineFx.IO.Bytecode.CodeDom
 			{
 				foreach (CompilerError e in res.Errors)
 				{
+#if LOGGING
 					log.Error(__Res.GetString(__Res.Compiler_Error, e.Line, e.Column, e.ErrorText));
+#endif
 				}
 				throw new InvalidOperationException(res.Errors[0].ErrorText);
 			}
@@ -217,11 +225,15 @@ namespace FluorineFx.IO.Bytecode.CodeDom
                     GeneratePropertySet(memberInfos[0]);
                 else
                 {
-                    //Log this error (do not throw exception), otherwise our current AMF stream becomes unreliable
+					//Log this error (do not throw exception), otherwise our current AMF stream becomes unreliable
+#if LOGGING
                     log.Warn(__Res.GetString(__Res.Optimizer_Warning));
+#endif
                     string msg = __Res.GetString(__Res.Reflection_MemberNotFound, string.Format("{0}.{1}", _mappedClass.FullName, key));
-                    log.Warn(msg);
-                    _layouter.AppendFormat("//{0}", msg);
+#if LOGGING
+					log.Warn(msg);
+#endif
+					_layouter.AppendFormat("//{0}", msg);
                     _layouter.Append("reader.ReadData(typeCode);");
                 }
 				key = _reader.ReadString();

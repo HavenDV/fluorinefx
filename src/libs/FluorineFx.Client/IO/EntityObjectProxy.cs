@@ -23,7 +23,9 @@ using System;
 using System.Collections;
 using System.Reflection;
 using System.Collections.Generic;
+#if LOGGING
 using log4net;
+#endif
 using FluorineFx.AMF3;
 using FluorineFx.Configuration;
 using FluorineFx.Util;

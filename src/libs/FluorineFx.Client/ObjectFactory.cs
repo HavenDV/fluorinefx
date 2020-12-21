@@ -26,6 +26,8 @@ using FluorineFx.Configuration;
 using FluorineFx.Reflection;
 using FluorineFx.Reflection.Lightweight;
 using FluorineFx.Util;
+#endif
+#if LOGGING && !SILVERLIGHT
 using log4net;
 #endif
 
@@ -36,7 +38,7 @@ namespace FluorineFx
 	/// </summary>
 	sealed class ObjectFactory
 	{
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 		private static readonly ILog Log = LogManager.GetLogger(typeof(ObjectFactory));
 #endif
         private static volatile ObjectFactory _instance;

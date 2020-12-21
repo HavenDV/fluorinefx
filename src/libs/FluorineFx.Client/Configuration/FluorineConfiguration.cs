@@ -127,7 +127,7 @@ namespace FluorineFx.Configuration
 #else
 #if SILVERLIGHT
                             _fluorineSettings = new FluorineSettings();
-#else
+#elif LOGGING
 							_fluorineSettings = ConfigurationManager.GetSection("fluorinefx/settings") as FluorineSettings;
 #endif
 #endif

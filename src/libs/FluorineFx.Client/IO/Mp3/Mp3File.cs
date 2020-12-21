@@ -20,7 +20,9 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Web;
+#if LOGGING
 using log4net;
+#endif
 using FluorineFx.Util;
 using FluorineFx.IO;
 

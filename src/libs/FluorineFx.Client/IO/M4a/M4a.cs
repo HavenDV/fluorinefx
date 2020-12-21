@@ -19,7 +19,9 @@
 using System;
 using System.IO;
 using System.Collections;
+#if LOGGING
 using log4net;
+#endif
 using FluorineFx.Util;
 using FluorineFx.IO;
 using FluorineFx.IO.FLV;
@@ -31,7 +33,9 @@ namespace FluorineFx.IO.M4a
     /// </summary>
     class M4a : IM4a
     {
+#if LOGGING
         private static readonly ILog log = LogManager.GetLogger(typeof(M4a));
+#endif
 
         private FileInfo _file;
 

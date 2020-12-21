@@ -19,7 +19,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 using log4net;
 #endif
 using FluorineFx.Util;
@@ -33,7 +33,7 @@ namespace FluorineFx.IO.Mp4
     /// </summary>
     class Mp4 : IMp4
     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
         private static readonly ILog log = LogManager.GetLogger(typeof(Mp4));
 #endif
 
@@ -149,7 +149,7 @@ namespace FluorineFx.IO.Mp4
             string fileName = _file.Name;
             if (_file.Exists)
             {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                 if (log.IsDebugEnabled)
                     log.Debug("File size: " + _file.Length);
 #endif
@@ -157,7 +157,7 @@ namespace FluorineFx.IO.Mp4
             }
             else
             {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                 log.Info("Creating new file: " + fileName);
 #endif
                 using (FileStream fs = _file.Create()) { }

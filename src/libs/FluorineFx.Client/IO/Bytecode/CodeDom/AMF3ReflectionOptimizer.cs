@@ -23,7 +23,9 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Security;
 using System.Security.Permissions;
+#if LOGGING
 using log4net;
+#endif
 
 using FluorineFx.AMF3;
 using FluorineFx.Configuration;
@@ -36,7 +38,9 @@ namespace FluorineFx.IO.Bytecode.CodeDom
 	/// </summary>
 	class AMF3ReflectionOptimizer : AMF0ReflectionOptimizer
 	{
+#if LOGGING
         private static readonly ILog log = LogManager.GetLogger(typeof(AMF3ReflectionOptimizer));
+#endif
 
         ClassDefinition _classDefinition;
 
@@ -70,9 +74,13 @@ namespace FluorineFx.IO.Bytecode.CodeDom
                 else
                 {
                     //Log this error (do not throw exception), otherwise our current AMF stream becomes unreliable
+#if LOGGING
                     log.Warn(__Res.GetString(__Res.Optimizer_Warning));
+#endif
                     string msg = __Res.GetString(__Res.Reflection_MemberNotFound, string.Format("{0}.{1}", _mappedClass.FullName, key));
+#if LOGGING
                     log.Warn(msg);
+#endif
                     _layouter.AppendFormat("//{0}", msg);
                     _layouter.Append("reader.ReadAMF3Data(typeCode);");
                 }

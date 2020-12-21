@@ -41,6 +41,9 @@ using System.Xml.Linq;
 //using System.Xml.Linq;
 #else
 using System.Data;
+#endif
+
+#if LOGGING
 using log4net;
 #endif
 
@@ -51,11 +54,11 @@ namespace FluorineFx.IO
 	/// </summary>
 	public class AMFWriter : BinaryWriter
 	{
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 		private static readonly ILog log = LogManager.GetLogger(typeof(AMFWriter));
 #endif
 
-		bool _useLegacyCollection = true;
+        bool _useLegacyCollection = true;
         bool _useLegacyThrowable = true;
 #if !(NET_1_1)
         static CopyOnWriteDictionary<string, ClassDefinition> classDefinitions;
@@ -674,18 +677,18 @@ namespace FluorineFx.IO
 			string customClass = type.FullName;
 			customClass = FluorineConfiguration.Instance.GetCustomClass(customClass);
 
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             if( log.IsDebugEnabled )
 				log.Debug(__Res.GetString(__Res.TypeMapping_Write, type.FullName, customClass));
 #endif
-			WriteUTF( customClass );
+            WriteUTF( customClass );
 
             ClassDefinition classDefinition = GetClassDefinition(obj);
             if (classDefinition == null)
             {
                 //Something went wrong in our reflection?
                 string msg = __Res.GetString(__Res.Fluorine_Fatal, "serializing " + obj.GetType().FullName);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                 if (log.IsFatalEnabled)
                     log.Fatal(msg);
 #endif
@@ -1305,7 +1308,7 @@ namespace FluorineFx.IO
                 {
                     //Something went wrong in our reflection?
                     string msg = __Res.GetString(__Res.Fluorine_Fatal, "serializing " + value.GetType().FullName);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                     if (log.IsFatalEnabled)
                         log.Fatal(msg);
 #endif

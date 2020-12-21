@@ -30,6 +30,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlTypes;
 using System.Web;
+#endif
+#if LOGGING
 using log4net;
 #endif
 #if !NET_2_0
@@ -48,7 +50,7 @@ namespace FluorineFx
 #if SILVERLIGHT
         static object _syncLock = new object();
 #endif
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
         private static readonly ILog log = LogManager.GetLogger(typeof(TypeHelper));
 #endif
 
@@ -160,15 +162,15 @@ namespace FluorineFx
 			{
 				try
 				{
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                     log.Debug(__Res.GetString(__Res.TypeHelper_Probing, file, typeName));
 #endif
-					Assembly assembly = Assembly.LoadFrom(file);
+                    Assembly assembly = Assembly.LoadFrom(file);
 					Type type = assembly.GetType(typeName, false);
 					if (type != null)
 						return type;
 				}
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 				catch(Exception ex)
 				{
                     if(log.IsWarnEnabled )
@@ -223,22 +225,24 @@ namespace FluorineFx
 				}
 				catch(Exception ex)
 				{
-					if( log.IsWarnEnabled )
+#if LOGGING
+                    if( log.IsWarnEnabled )
 					{
                         log.Warn(__Res.GetString(__Res.TypeHelper_LoadDllFail, file));
                         log.Warn(ex.Message);
 					}
+#endif
 				}			
 			}
 			return (Type[])result.ToArray(typeof(Type));
 		}
 #endif
-        /// <summary>
-        /// This method supports the Fluorine infrastructure and is not intended to be used directly from your code.
-        /// </summary>
-        /// <param name="methodInfo"></param>
-        /// <returns></returns>
-		public static bool SkipMethod(MethodInfo methodInfo)
+                    /// <summary>
+                    /// This method supports the Fluorine infrastructure and is not intended to be used directly from your code.
+                    /// </summary>
+                    /// <param name="methodInfo"></param>
+                    /// <returns></returns>
+                    public static bool SkipMethod(MethodInfo methodInfo)
 		{
 			if (methodInfo.ReturnType == typeof(IAsyncResult))
 				return true;
@@ -359,15 +363,15 @@ namespace FluorineFx
 				object obj = Activator.CreateInstance(constructed);
 				if (obj == null)
 				{
-#if !SILVERLIGHT
+#if LOGGING && SILVERLIGHT
                     if(log != null && log.IsErrorEnabled)
 					{
 						string msg = string.Format("Could not instantiate the generic type {0}.", type.FullName);
 						log.Error(msg);
 					}
 #endif
-				}
-				return obj;
+                }
+                return obj;
 			}
 		    return Activator.CreateInstance(type);
 		}
@@ -1034,7 +1038,7 @@ namespace FluorineFx
                     }
                     else
                     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                         if (log.IsErrorEnabled)
                             log.Error(string.Format("{0} type arguments of the generic type {1} expecting 1.", typeParameters.Length, targetType.FullName));
 #endif
@@ -1077,7 +1081,7 @@ namespace FluorineFx
                     }
                     else
                     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                         if (log.IsErrorEnabled)
                             log.Error(string.Format("{0} type arguments of the generic type {1} expecting 1.", typeParameters.Length, targetType.FullName));
 #endif
@@ -1102,7 +1106,7 @@ namespace FluorineFx
             return System.Convert.ChangeType(value, targetType, null);
         }
 
-        #region Nullable Types
+#region Nullable Types
 
         /// <summary>
         /// Converts the value of the specified Object to its equivalent nullable 8-bit signed integer.
@@ -1309,9 +1313,9 @@ namespace FluorineFx
             if (value == null) return true;
             return Util.Convert.CanConvertToNullableGuid(value);
         }
-        #endregion
+#endregion
 
-        #region Primitive Types
+#region Primitive Types
 
         static readonly SByte DefaultSByteNullValue;
         /// <summary>
@@ -1495,9 +1499,9 @@ namespace FluorineFx
                     Util.Convert.ToBoolean(value);
         }
 
-        #endregion
+#endregion
 
-        #region Simple Types
+#region Simple Types
 
         static readonly string DefaultStringNullValue;
         /// <summary>
@@ -1640,9 +1644,9 @@ namespace FluorineFx
                     Util.Convert.ToCharArray(value);
         }
 
-        #endregion
+#endregion
 
-        #region SqlTypes
+#region SqlTypes
 #if !SILVERLIGHT
         /// <summary>
         /// Converts the value of the specified Object to its equivalent SqlByte.
@@ -1803,9 +1807,9 @@ namespace FluorineFx
                     Util.Convert.ToSqlGuid(value);
         }
 #endif
-        #endregion
+#endregion
 
-        #region DataSet conversions
+#region DataSet conversions
 #if !SILVERLIGHT
         /// <summary>
         /// Converts the specified DataTable to its equivalent ASObject.
@@ -1893,6 +1897,6 @@ namespace FluorineFx
             return asDataSet;
         }
 #endif
-        #endregion DataSet conversions
+#endregion DataSet conversions
     }
 }

@@ -20,7 +20,7 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 using log4net;
 #endif
 using FluorineFx.Util;

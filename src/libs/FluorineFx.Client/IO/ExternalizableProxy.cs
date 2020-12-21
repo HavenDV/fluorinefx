@@ -22,7 +22,7 @@ using System.Reflection;
 #if !(NET_1_1)
 using System.Collections.Generic;
 #endif
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 using log4net;
 #endif
 using FluorineFx.AMF3;

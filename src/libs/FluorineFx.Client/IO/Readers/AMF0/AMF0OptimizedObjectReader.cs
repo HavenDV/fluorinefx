@@ -19,7 +19,9 @@
 using System;
 using System.Collections;
 
+#if LOGGING
 using log4net;
+#endif
 
 using FluorineFx.AMF3;
 using FluorineFx.Configuration;
@@ -32,7 +34,9 @@ namespace FluorineFx.IO.Readers
 	/// </summary>
 	class AMF0OptimizedObjectReader : IAMFReader
 	{
+#if LOGGING
 		private static readonly ILog log = LogManager.GetLogger(typeof(AMF0OptimizedObjectReader));
+#endif
 
 		Hashtable _optimizedReaders;
 
@@ -41,17 +45,19 @@ namespace FluorineFx.IO.Readers
 			_optimizedReaders = new Hashtable();
 		}
 
-		#region IAMFReader Members
+#region IAMFReader Members
 
 		public object ReadData(AMFReader reader)
 		{
 			object instance = null;
 			string typeIdentifier = reader.ReadString();
+#if LOGGING
 			if(log.IsDebugEnabled )
 			{
 				string msg = string.Format("Attempt to read custom object {0}", typeIdentifier);
 				log.Debug(msg);
 			}
+#endif
             IReflectionOptimizer reflectionOptimizer = _optimizedReaders[typeIdentifier] as IReflectionOptimizer;
 			if( reflectionOptimizer == null )
 			{
@@ -59,14 +65,16 @@ namespace FluorineFx.IO.Readers
 				{
                     if (!_optimizedReaders.Contains(typeIdentifier))
                     {
+#if LOGGING
 						if(log.IsDebugEnabled )
 						{
 							string msg = string.Format("Generating optimizer for type {0}", typeIdentifier);
 							log.Debug(msg);
 						}
+#endif
 
-                        //Temporary reader
-                        _optimizedReaders[typeIdentifier] = new AMF0TempObjectReader();
+						//Temporary reader
+						_optimizedReaders[typeIdentifier] = new AMF0TempObjectReader();
                         Type type = ObjectFactory.Locate(typeIdentifier);
 						if( type != null )
 						{
@@ -96,10 +104,12 @@ namespace FluorineFx.IO.Readers
 						}
 						else
 						{
+#if LOGGING
 							if( log.IsWarnEnabled )
 								log.Warn("Custom object " + typeIdentifier + " could not be loaded. An ActionScript typed object (ASObject) will be created");
-
-                            reflectionOptimizer = new AMF0TypedASObjectReader(typeIdentifier);
+#endif
+                            
+							reflectionOptimizer = new AMF0TypedASObjectReader(typeIdentifier);
                             _optimizedReaders[typeIdentifier] = reflectionOptimizer;
                             instance = reflectionOptimizer.ReadData(reader, null);
 						}
@@ -118,12 +128,12 @@ namespace FluorineFx.IO.Readers
 			return instance;
 		}
 
-		#endregion
+#endregion
 	}
 
     class AMF0TempObjectReader : IReflectionOptimizer
     {
-        #region IReflectionOptimizer Members
+#region IReflectionOptimizer Members
 
         public object CreateInstance()
         {
@@ -136,6 +146,6 @@ namespace FluorineFx.IO.Readers
             return amfObject;
         }
 
-        #endregion
+#endregion
     }
 }

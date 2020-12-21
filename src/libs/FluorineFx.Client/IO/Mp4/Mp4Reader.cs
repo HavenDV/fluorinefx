@@ -21,7 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 using log4net;
 #endif
 using FluorineFx.Util;
@@ -34,7 +34,7 @@ namespace FluorineFx.IO.Mp4
     /// </summary>
     class Mp4Reader : ITagReader
     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
         private static readonly ILog log = LogManager.GetLogger(typeof(Mp4Reader));
 #endif
         /// <summary>
@@ -244,7 +244,7 @@ namespace FluorineFx.IO.Mp4
                 // The first atom will/should be the type
                 Mp4Atom type = Mp4Atom.CreateAtom(_inputStream);
                 // Expect ftyp
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                 log.Debug(string.Format("Type {0}", type));
 #endif
                 //log.debug("Atom int types - free={} wide={}", MP4Atom.typeToInt("free"), MP4Atom.typeToInt("wide"));
@@ -260,7 +260,7 @@ namespace FluorineFx.IO.Mp4
                             topAtoms++;
                             Mp4Atom moov = atom;
                             // expect moov
-                            #if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                             log.Debug(string.Format("Type {0}", moov));
 #endif
                             //log.Debug("moov children: {}", moov.getChildren());
@@ -269,13 +269,13 @@ namespace FluorineFx.IO.Mp4
                             Mp4Atom mvhd = moov.Lookup(Mp4Atom.TypeToInt("mvhd"), 0);
                             if (mvhd != null)
                             {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                 log.Debug("Movie header atom found");
 #endif
                                 //get the initial timescale
                                 _timeScale = mvhd.TimeScale;
                                 _duration = mvhd.Duration;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                 log.Debug(string.Format("Time scale {0} Duration {1}", _timeScale, _duration));
 #endif
                             }
@@ -296,7 +296,7 @@ namespace FluorineFx.IO.Mp4
                                 Mp4Atom trak = moov.Lookup(Mp4Atom.TypeToInt("trak"), i);
                                 if (trak != null)
                                 {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                     log.Debug("Track atom found");
 #endif
                                     //log.debug("trak children: {}", trak.getChildren());
@@ -304,7 +304,7 @@ namespace FluorineFx.IO.Mp4
                                     Mp4Atom tkhd = trak.Lookup(Mp4Atom.TypeToInt("tkhd"), 0);
                                     if (tkhd != null)
                                     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                         log.Debug("Track header atom found");
 #endif
                                         //log.debug("tkhd children: {}", tkhd.getChildren());
@@ -312,7 +312,7 @@ namespace FluorineFx.IO.Mp4
                                         {
                                             _width = tkhd.Width;
                                             _height = tkhd.Height;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                             log.Debug(string.Format("Width {0} x Height {1}", _width, _height));
 #endif
                                         }
@@ -321,7 +321,7 @@ namespace FluorineFx.IO.Mp4
                                     Mp4Atom edts = trak.Lookup(Mp4Atom.TypeToInt("edts"), 0);
                                     if (edts != null)
                                     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                         log.Debug("Edit atom found");
 #endif
                                         //log.debug("edts children: {}", edts.getChildren());
@@ -331,7 +331,7 @@ namespace FluorineFx.IO.Mp4
                                     Mp4Atom mdia = trak.Lookup(Mp4Atom.TypeToInt("mdia"), 0);
                                     if (mdia != null)
                                     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                         log.Debug("Media atom found");
 #endif
                                         // mdia: mdhd, hdlr, minf
@@ -341,12 +341,12 @@ namespace FluorineFx.IO.Mp4
                                         Mp4Atom mdhd = mdia.Lookup(Mp4Atom.TypeToInt("mdhd"), 0);
                                         if (mdhd != null)
                                         {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                             log.Debug("Media data header atom found");
 #endif
                                             //this will be for either video or audio depending media info
                                             scale = mdhd.TimeScale;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                             log.Debug(string.Format("Time scale {0}", scale));
 #endif
                                         }
@@ -354,7 +354,7 @@ namespace FluorineFx.IO.Mp4
                                         Mp4Atom hdlr = mdia.Lookup(Mp4Atom.TypeToInt("hdlr"), 0);
                                         if (hdlr != null)
                                         {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                             log.Debug("Handler ref atom found");
                                             // soun or vide
                                             log.Debug(string.Format("Handler type: {0}", Mp4Atom.IntToType(hdlr.HandlerType)));
@@ -366,7 +366,7 @@ namespace FluorineFx.IO.Mp4
                                                 if (scale > 0)
                                                 {
                                                     _videoTimeScale = scale * 1.0;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                     log.Debug(string.Format("Video time scale: {0}", _videoTimeScale));
 #endif
                                                 }
@@ -377,7 +377,7 @@ namespace FluorineFx.IO.Mp4
                                                 if (scale > 0)
                                                 {
                                                     _audioTimeScale = scale * 1.0;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                     log.Debug(string.Format("Audio time scale: {0}", _audioTimeScale));
 #endif
                                                 }
@@ -388,7 +388,7 @@ namespace FluorineFx.IO.Mp4
                                         Mp4Atom minf = mdia.Lookup(Mp4Atom.TypeToInt("minf"), 0);
                                         if (minf != null)
                                         {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                             log.Debug("Media info atom found");
 #endif
                                             // minf: (audio) smhd, dinf, stbl / (video) vmhd,
@@ -397,13 +397,13 @@ namespace FluorineFx.IO.Mp4
                                             Mp4Atom smhd = minf.Lookup(Mp4Atom.TypeToInt("smhd"), 0);
                                             if (smhd != null)
                                             {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                 log.Debug("Sound header atom found");
 #endif
                                                 Mp4Atom dinf = minf.Lookup(Mp4Atom.TypeToInt("dinf"), 0);
                                                 if (dinf != null)
                                                 {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                     log.Debug("Data info atom found");
 #endif
                                                     // dinf: dref
@@ -411,7 +411,7 @@ namespace FluorineFx.IO.Mp4
                                                     Mp4Atom dref = dinf.Lookup(Mp4Atom.TypeToInt("dref"), 0);
                                                     if (dref != null)
                                                     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug("Data reference atom found");
 #endif
                                                     }
@@ -420,7 +420,7 @@ namespace FluorineFx.IO.Mp4
                                                 Mp4Atom stbl = minf.Lookup(Mp4Atom.TypeToInt("stbl"), 0);
                                                 if (stbl != null)
                                                 {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                     log.Debug("Sample table atom found");
 #endif
                                                     // stbl: stsd, stts, stss, stsc, stsz, stco,
@@ -437,14 +437,14 @@ namespace FluorineFx.IO.Mp4
                                                     if (stsd != null)
                                                     {
                                                         //stsd: mp4a
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug("Sample description atom found");
 #endif
                                                         Mp4Atom mp4a = stsd.Children[0];
                                                         //could set the audio codec here
                                                         SetAudioCodecId(Mp4Atom.IntToType(mp4a.Type));
                                                         //log.debug("{}", ToStringBuilder.reflectionToString(mp4a));
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug(string.Format("Sample size: {0}", mp4a.SampleSize));
 #endif
                                                         int ats = mp4a.TimeScale;
@@ -454,14 +454,14 @@ namespace FluorineFx.IO.Mp4
                                                             _audioTimeScale = ats * 1.0;
                                                         }
                                                         _audioChannels = mp4a.ChannelCount;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug(string.Format("Sample rate (audio time scale): {0}", _audioTimeScale));
                                                         log.Debug(string.Format("Channels: {0}", _audioChannels));
 #endif
                                                         //mp4a: esds
                                                         if (mp4a.Children.Count > 0)
                                                         {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                             log.Debug("Elementary stream descriptor atom found");
 #endif
                                                             Mp4Atom esds = mp4a.Children[0];
@@ -519,15 +519,15 @@ namespace FluorineFx.IO.Mp4
                                                     Mp4Atom stsc = stbl.Lookup(Mp4Atom.TypeToInt("stsc"), 0);
                                                     if (stsc != null)
                                                     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug("Sample to chunk atom found");
 #endif
                                                         _audioSamplesToChunks = stsc.Records;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug(string.Format("Record count: {0}", _audioSamplesToChunks.Count));
 #endif
                                                         Mp4Atom.Record rec = _audioSamplesToChunks[0];
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug(string.Format("Record data: Description index={0} Samples per chunk={1}", rec.SampleDescriptionIndex, rec.SamplesPerChunk));
 #endif
                                                     }
@@ -535,12 +535,12 @@ namespace FluorineFx.IO.Mp4
                                                     Mp4Atom stsz = stbl.Lookup(Mp4Atom.TypeToInt("stsz"), 0);
                                                     if (stsz != null)
                                                     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug("Sample size atom found");
 #endif
                                                         _audioSamples = stsz.Samples;
                                                         //vector full of integers
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug(string.Format("Sample size: {0}", stsz.SampleSize));
                                                         log.Debug(string.Format("Sample count: {0}", _audioSamples.Count));
 #endif
@@ -549,12 +549,12 @@ namespace FluorineFx.IO.Mp4
                                                     Mp4Atom stco = stbl.Lookup(Mp4Atom.TypeToInt("stco"), 0);
                                                     if (stco != null)
                                                     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug("Chunk offset atom found");
 #endif
                                                         //vector full of integers
                                                         _audioChunkOffsets = stco.Chunks;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug(string.Format("Chunk count: {0}", _audioChunkOffsets.Count));
 #endif
                                                     }
@@ -562,22 +562,22 @@ namespace FluorineFx.IO.Mp4
                                                     Mp4Atom stts = stbl.Lookup(Mp4Atom.TypeToInt("stts"), 0);
                                                     if (stts != null)
                                                     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug("Time to sample atom found");
 #endif
                                                         List<Mp4Atom.TimeSampleRecord> records = stts.TimeToSamplesRecords;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug(string.Format("Record count: {0}", records.Count));
 #endif
                                                         Mp4Atom.TimeSampleRecord rec = records[0];
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug(string.Format("Record data: Consecutive samples={0} Duration={1}", rec.ConsecutiveSamples, rec.SampleDuration));
 #endif
                                                         //if we have 1 record then all samples have the same duration
                                                         if (records.Count > 1)
                                                         {
                                                             //TODO: handle audio samples with varying durations
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                             log.Debug("Audio samples have differing durations, audio playback may fail");
 #endif
                                                         }
@@ -588,13 +588,13 @@ namespace FluorineFx.IO.Mp4
                                             Mp4Atom vmhd = minf.Lookup(Mp4Atom.TypeToInt("vmhd"), 0);
                                             if (vmhd != null)
                                             {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                 log.Debug("Video header atom found");
 #endif
                                                 Mp4Atom dinf = minf.Lookup(Mp4Atom.TypeToInt("dinf"), 0);
                                                 if (dinf != null)
                                                 {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                     log.Debug("Data info atom found");
 #endif
                                                     // dinf: dref
@@ -602,7 +602,7 @@ namespace FluorineFx.IO.Mp4
                                                     Mp4Atom dref = dinf.Lookup(Mp4Atom.TypeToInt("dref"), 0);
                                                     if (dref != null)
                                                     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug("Data reference atom found");
 #endif
                                                     }
@@ -610,7 +610,7 @@ namespace FluorineFx.IO.Mp4
                                                 Mp4Atom stbl = minf.Lookup(Mp4Atom.TypeToInt("stbl"), 0);
                                                 if (stbl != null)
                                                 {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                     log.Debug("Sample table atom found");
 #endif
                                                     // stbl: stsd, stts, stss, stsc, stsz, stco,
@@ -629,7 +629,7 @@ namespace FluorineFx.IO.Mp4
                                                     Mp4Atom stsd = stbl.Lookup(Mp4Atom.TypeToInt("stsd"), 0);
                                                     if (stsd != null)
                                                     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug("Sample description atom found");
 #endif
                                                         //log.Debug("Sample description (video) stsd children: {}", stsd.getChildren());
@@ -645,11 +645,11 @@ namespace FluorineFx.IO.Mp4
                                                             if (codecChild != null)
                                                             {
                                                                 _avcLevel = codecChild.AvcLevel;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                                 log.Debug(string.Format("AVC level: {0}", _avcLevel));
 #endif
                                                                 _avcProfile = codecChild.AvcProfile;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                                 log.Debug(string.Format("AVC Profile: {0}", _avcProfile));
                                                                 log.Debug(string.Format("AVCC size: {0}", codecChild.Size));
 #endif
@@ -669,11 +669,11 @@ namespace FluorineFx.IO.Mp4
                                                                     if (codecChild != null)
                                                                     {
                                                                         _avcLevel = codecChild.AvcLevel;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                                         log.Debug(string.Format("AVC level: {0}", _avcLevel));
 #endif
                                                                         _avcProfile = codecChild.AvcProfile;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                                         log.Debug(string.Format("AVC Profile: {0}", _avcProfile));
                                                                         log.Debug(string.Format("AVCC size: {0}", codecChild.Size));
 #endif
@@ -737,15 +737,15 @@ namespace FluorineFx.IO.Mp4
                                                     Mp4Atom stsc = stbl.Lookup(Mp4Atom.TypeToInt("stsc"), 0);
                                                     if (stsc != null)
                                                     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug("Sample to chunk atom found");
 #endif
                                                         _videoSamplesToChunks = stsc.Records;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug(string.Format("Record count: {0}", _videoSamplesToChunks.Count));
 #endif
                                                         Mp4Atom.Record rec = _videoSamplesToChunks[0];
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug(string.Format("Record data: Description index={0} Samples per chunk={1}", rec.SampleDescriptionIndex, rec.SamplesPerChunk));
 #endif
                                                     }
@@ -753,18 +753,18 @@ namespace FluorineFx.IO.Mp4
                                                     Mp4Atom stsz = stbl.Lookup(Mp4Atom.TypeToInt("stsz"), 0);
                                                     if (stsz != null)
                                                     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug("Sample size atom found");
 #endif
                                                         //vector full of integers							
                                                         _videoSamples = stsz.Samples;
                                                         //if sample size is 0 then the table must be checked due
                                                         //to variable sample sizes
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug(string.Format("Sample size: {0}", stsz.SampleSize));
 #endif
                                                         _videoSampleCount = _videoSamples.Count;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug(string.Format("Sample count: {0}", _videoSampleCount));
 #endif
                                                     }
@@ -772,12 +772,12 @@ namespace FluorineFx.IO.Mp4
                                                     Mp4Atom stco = stbl.Lookup(Mp4Atom.TypeToInt("stco"), 0);
                                                     if (stco != null)
                                                     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug("Chunk offset atom found");
 #endif
                                                         //vector full of integers
                                                         _videoChunkOffsets = stco.Chunks;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug(string.Format("Chunk count: {0}", _videoChunkOffsets.Count));
 #endif
                                                     }
@@ -785,12 +785,12 @@ namespace FluorineFx.IO.Mp4
                                                     Mp4Atom stss = stbl.Lookup(Mp4Atom.TypeToInt("stss"), 0);
                                                     if (stss != null)
                                                     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug("Sync sample atom found");
 #endif
                                                         //vector full of integers
                                                         _syncSamples = stss.SyncSamples;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug(string.Format("Keyframes: {0}", _syncSamples.Count));
 #endif
                                                     }
@@ -798,22 +798,22 @@ namespace FluorineFx.IO.Mp4
                                                     Mp4Atom stts = stbl.Lookup(Mp4Atom.TypeToInt("stts"), 0);
                                                     if (stts != null)
                                                     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug("Time to sample atom found");
 #endif
                                                         List<Mp4Atom.TimeSampleRecord> records = stts.TimeToSamplesRecords;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug(string.Format("Record count: {0}", records.Count));
 #endif
                                                         Mp4Atom.TimeSampleRecord rec = records[0];
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                         log.Debug(string.Format("Record data: Consecutive samples={0} Duration={1}", rec.ConsecutiveSamples, rec.SampleDuration));
 #endif
                                                         //if we have 1 record then all samples have the same duration
                                                         if (records.Count > 1)
                                                         {
                                                             //TODO: handle video samples with varying durations
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                                                             log.Debug("Video samples have differing durations, video playback may fail");
 #endif
                                                         }
@@ -829,14 +829,14 @@ namespace FluorineFx.IO.Mp4
                             }
                             //calculate FPS
                             _fps = (_videoSampleCount * _timeScale) / (double)_duration;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                             log.Debug(string.Format("FPS calc: ({0} * {1}) / {2}", _videoSampleCount, _timeScale, _duration));
                             log.Debug(string.Format("FPS: {0}", _fps));
 #endif
                             //real duration
                             StringBuilder sb = new StringBuilder();
                             double videoTime = ((double)_duration / (double)_timeScale);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                             log.Debug(string.Format("Video time: {0}", videoTime));
 #endif
                             int minutes = (int)(videoTime / 60);
@@ -851,7 +851,7 @@ namespace FluorineFx.IO.Mp4
                             //sb.append(df.format((videoTime % 60)));
                             sb.Append(videoTime % 60);
                             _formattedDuration = sb.ToString();
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                             log.Debug(string.Format("Time: {0}", _formattedDuration));
 #endif
                             break;
@@ -863,7 +863,7 @@ namespace FluorineFx.IO.Mp4
                             //log.debug("{}", ToStringBuilder.reflectionToString(mdat));
                             _mdatOffset = _inputStream.Offset - dataSize;
                             //log.Debug(string.Format("File size: {0} mdat size: {1}", _file.Length, dataSize));
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                             log.Debug(string.Format("mdat size: {0}", dataSize));
 #endif
                             break;
@@ -871,7 +871,7 @@ namespace FluorineFx.IO.Mp4
                         case 2003395685: //wide
                             break;
                         default:
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                             log.Warn(string.Format("Unexpected atom: {}", Mp4Atom.IntToType(atom.Type)));
 #endif
                             break;
@@ -881,14 +881,14 @@ namespace FluorineFx.IO.Mp4
                 //add the tag name (size) to the offsets
                 _moovOffset += 8;
                 _mdatOffset += 8;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                 log.Debug(string.Format("Offsets moov: {0} mdat: {1}", _moovOffset, _mdatOffset));
 #endif
 
             }
             catch(Exception ex)
             {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                 log.Error("Exception decoding header / atoms", ex);
 #endif
             }		            
@@ -933,7 +933,7 @@ namespace FluorineFx.IO.Mp4
 
                 //get the current frame
                 Mp4Frame frame = _frames[_currentFrame];
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                 log.Debug(string.Format("Playback #{0} {1}", _currentFrame, frame));
 #endif
                 int sampleSize = frame.Size;
@@ -984,7 +984,7 @@ namespace FluorineFx.IO.Mp4
                 }
                 catch (Exception ex)
                 {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                     log.Error("Error on channel position / read", ex);
 #endif
                 }
@@ -1031,7 +1031,7 @@ namespace FluorineFx.IO.Mp4
         /// </summary>
         public void AnalyzeFrames()
         {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug("Analyzing frames");
 #endif
             // Maps positions, samples, timestamps to one another
@@ -1139,7 +1139,7 @@ namespace FluorineFx.IO.Mp4
 
             //sort the frames
             _frames.Sort();
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug(string.Format("Frames count: {0}", _frames.Count));
             //log.debug("Frames: {}", frames);
 #endif
@@ -1213,7 +1213,7 @@ namespace FluorineFx.IO.Mp4
         /// <returns>Metadata event tag.</returns>
         ITag CreateFileMeta()
         {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug("Creating onMetaData");
 #endif
             // Create tag for onMetaData event
@@ -1329,7 +1329,7 @@ namespace FluorineFx.IO.Mp4
         /// </summary>
         private void CreatePreStreamingTags()
         {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             log.Debug("Creating pre-streaming tags");
 #endif
             ITag tag = null;

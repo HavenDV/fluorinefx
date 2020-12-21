@@ -21,7 +21,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+#if LOGGING
 using log4net;
+#endif
 using FluorineFx.Util;
 using FluorineFx.IO;
 using FluorineFx.IO.Mp4;
@@ -33,7 +35,9 @@ namespace FluorineFx.IO.M4a
     /// </summary>
     class M4aReader : ITagReader
     {
+#if LOGGING
         private static readonly ILog log = LogManager.GetLogger(typeof(M4aReader));
+#endif
 
         object _syncLock = new object();
         private FileInfo _file;
@@ -146,7 +150,9 @@ namespace FluorineFx.IO.M4a
                 // the first atom will/should be the type
                 Mp4Atom type = Mp4Atom.CreateAtom(_inputStream);
                 // expect ftyp
+#if LOGGING
                 log.Debug(string.Format("Type {0}", type));
+#endif
                 // keep a running count of the number of atoms found at the "top" levels
                 int topAtoms = 0;
                 // we want a moov and an mdat, anything else throw the invalid file type error
@@ -159,18 +165,24 @@ namespace FluorineFx.IO.M4a
                             topAtoms++;
                             Mp4Atom moov = atom;
                             // expect moov
+#if LOGGING
                             log.Debug(string.Format("Type {0}", moov));
+#endif
                             //log.debug("moov children: {}", moov.getChildren());
                             _moovOffset = _inputStream.Offset - moov.Size;
 
                             Mp4Atom mvhd = moov.Lookup(Mp4Atom.TypeToInt("mvhd"), 0);
                             if (mvhd != null)
                             {
+#if LOGGING
                                 log.Debug("Movie header atom found");
+#endif
                                 //get the initial timescale
                                 _timeScale = mvhd.TimeScale;
                                 _duration = mvhd.Duration;
+#if LOGGING
                                 log.Debug(string.Format("Time scale {0} Duration {1}", _timeScale, _duration));
+#endif
                             }
 
                             /* nothing needed here yet
@@ -184,21 +196,27 @@ namespace FluorineFx.IO.M4a
                             Mp4Atom trak = moov.Lookup(Mp4Atom.TypeToInt("trak"), 0);
                             if (trak != null)
                             {
+#if LOGGING
                                 log.Debug("Track atom found");
+#endif
                                 //log.debug("trak children: {}", trak.getChildren());
                                 // trak: tkhd, edts, mdia
 
                                 Mp4Atom edts = trak.Lookup(Mp4Atom.TypeToInt("edts"), 0);
                                 if (edts != null)
                                 {
+#if LOGGING
                                     log.Debug("Edit atom found");
+#endif
                                     //log.debug("edts children: {}", edts.getChildren());
                                 }
 
                                 Mp4Atom mdia = trak.Lookup(Mp4Atom.TypeToInt("mdia"), 0);
                                 if (mdia != null)
                                 {
+#if LOGGING
                                     log.Debug("Media atom found");
+#endif
                                     // mdia: mdhd, hdlr, minf
 
                                     int scale = 0;
@@ -206,25 +224,35 @@ namespace FluorineFx.IO.M4a
                                     Mp4Atom mdhd = mdia.Lookup(Mp4Atom.TypeToInt("mdhd"), 0);
                                     if (mdhd != null)
                                     {
+#if LOGGING
                                         log.Debug("Media data header atom found");
+#endif
                                         //this will be for either video or audio depending media info
                                         scale = mdhd.TimeScale;
+#if LOGGING
                                         log.Debug(string.Format("Time scale {0}", scale));
+#endif
                                     }
 
                                     Mp4Atom hdlr = mdia.Lookup(Mp4Atom.TypeToInt("hdlr"), 0);
                                     if (hdlr != null)
                                     {
+#if LOGGING
                                         log.Debug("Handler ref atom found");
-                                        // soun or vide
+#endif
+// soun or vide
+#if LOGGING
                                         log.Debug(string.Format("Handler type: {0}", Mp4Atom.IntToType(hdlr.HandlerType)));
+#endif
                                         String hdlrType = Mp4Atom.IntToType(hdlr.HandlerType);
                                         if ("soun".Equals(hdlrType))
                                         {
                                             if (scale > 0)
                                             {
                                                 _audioTimeScale = scale * 1.0;
+#if LOGGING
                                                 log.Debug(string.Format("Audio time scale: {0}", _audioTimeScale));
+#endif
                                             }
                                         }
                                     }
@@ -232,30 +260,40 @@ namespace FluorineFx.IO.M4a
                                     Mp4Atom minf = mdia.Lookup(Mp4Atom.TypeToInt("minf"), 0);
                                     if (minf != null)
                                     {
+#if LOGGING
                                         log.Debug("Media info atom found");
+#endif
                                         // minf: (audio) smhd, dinf, stbl / (video) vmhd,
                                         // dinf, stbl
                                         Mp4Atom smhd = minf.Lookup(Mp4Atom.TypeToInt("smhd"), 0);
                                         if (smhd != null)
                                         {
-                                            log.Debug("Sound header atom found");
+                                            #if LOGGING
+log.Debug("Sound header atom found");
+#endif
                                             Mp4Atom dinf = minf.Lookup(Mp4Atom.TypeToInt("dinf"), 0);
                                             if (dinf != null)
                                             {
+#if LOGGING
                                                 log.Debug("Data info atom found");
+#endif
                                                 // dinf: dref
                                                 //log.Debug("Sound dinf children: {}", dinf.getChildren());
                                                 Mp4Atom dref = dinf.Lookup(Mp4Atom.TypeToInt("dref"), 0);
                                                 if (dref != null)
                                                 {
+#if LOGGING
                                                     log.Debug("Data reference atom found");
+#endif
                                                 }
 
                                             }
                                             Mp4Atom stbl = minf.Lookup(Mp4Atom.TypeToInt("stbl"), 0);
                                             if (stbl != null)
                                             {
+#if LOGGING
                                                 log.Debug("Sample table atom found");
+#endif
                                                 // stbl: stsd, stts, stss, stsc, stsz, stco,
                                                 // stsh
                                                 //log.debug("Sound stbl children: {}", stbl.getChildren());
@@ -270,12 +308,16 @@ namespace FluorineFx.IO.M4a
                                                 if (stsd != null)
                                                 {
                                                     //stsd: mp4a
+#if LOGGING
                                                     log.Debug("Sample description atom found");
+#endif
                                                     Mp4Atom mp4a = stsd.Children[0];
                                                     //could set the audio codec here
                                                     SetAudioCodecId(Mp4Atom.IntToType(mp4a.Type));
                                                     //log.debug("{}", ToStringBuilder.reflectionToString(mp4a));
+#if LOGGING
                                                     log.Debug(string.Format("Sample size: {0}", mp4a.SampleSize));
+#endif
                                                     int ats = mp4a.TimeScale;
                                                     //skip invalid audio time scale
                                                     if (ats > 0)
@@ -283,12 +325,18 @@ namespace FluorineFx.IO.M4a
                                                         _audioTimeScale = ats * 1.0;
                                                     }
                                                     _audioChannels = mp4a.ChannelCount;
+#if LOGGING
                                                     log.Debug(string.Format("Sample rate (audio time scale): {0}", _audioTimeScale));
+#endif
+#if LOGGING
                                                     log.Debug(string.Format("Channels: {0}", _audioChannels));
+#endif
                                                     //mp4a: esds
                                                     if (mp4a.Children.Count > 0)
                                                     {
+#if LOGGING
                                                         log.Debug("Elementary stream descriptor atom found");
+#endif
                                                         Mp4Atom esds = mp4a.Children[0];
                                                         //log.debug("{}", ToStringBuilder.reflectionToString(esds));
                                                         Mp4Descriptor descriptor = esds.EsdDescriptor;
@@ -344,45 +392,69 @@ namespace FluorineFx.IO.M4a
                                                 Mp4Atom stsc = stbl.Lookup(Mp4Atom.TypeToInt("stsc"), 0);
                                                 if (stsc != null)
                                                 {
+#if LOGGING
                                                     log.Debug("Sample to chunk atom found");
+#endif
                                                     _audioSamplesToChunks = stsc.Records;
+#if LOGGING
                                                     log.Debug(string.Format("Record count: {0}", _audioSamplesToChunks.Count));
+#endif
                                                     Mp4Atom.Record rec = _audioSamplesToChunks[0];
+#if LOGGING
                                                     log.Debug(string.Format("Record data: Description index={0} Samples per chunk={1}", rec.SampleDescriptionIndex, rec.SamplesPerChunk));
+#endif
                                                 }
                                                 //stsz - has Samples
                                                 Mp4Atom stsz = stbl.Lookup(Mp4Atom.TypeToInt("stsz"), 0);
                                                 if (stsz != null)
                                                 {
+#if LOGGING
                                                     log.Debug("Sample size atom found");
+#endif
                                                     _audioSamples = stsz.Samples;
                                                     //vector full of integers										
+#if LOGGING
                                                     log.Debug(string.Format("Sample size: {0}", stsz.SampleSize));
+#endif
+#if LOGGING
                                                     log.Debug(string.Format("Sample count: {0}", _audioSamples.Count));
+#endif
                                                 }
                                                 //stco - has Chunks
                                                 Mp4Atom stco = stbl.Lookup(Mp4Atom.TypeToInt("stco"), 0);
                                                 if (stco != null)
                                                 {
+#if LOGGING
                                                     log.Debug("Chunk offset atom found");
+#endif
                                                     //vector full of integers
                                                     _audioChunkOffsets = stco.Chunks;
+#if LOGGING
                                                     log.Debug(string.Format("Chunk count: {0}", _audioChunkOffsets.Count));
+#endif
                                                 }
                                                 //stts - has TimeSampleRecords
                                                 Mp4Atom stts = stbl.Lookup(Mp4Atom.TypeToInt("stts"), 0);
                                                 if (stts != null)
                                                 {
+#if LOGGING
                                                     log.Debug("Time to sample atom found");
+#endif
                                                     List<Mp4Atom.TimeSampleRecord> records = stts.TimeToSamplesRecords;
+#if LOGGING
                                                     log.Debug(string.Format("Record count: {0}", records.Count));
+#endif
                                                     Mp4Atom.TimeSampleRecord rec = records[0];
+#if LOGGING
                                                     log.Debug(string.Format("Record data: Consecutive samples={0} Duration={1}", rec.ConsecutiveSamples, rec.SampleDuration));
+#endif
                                                     //if we have 1 record then all samples have the same duration
                                                     if (records.Count > 1)
                                                     {
                                                         //TODO: handle audio samples with varying durations
+#if LOGGING
                                                         log.Debug("Audio samples have differing durations, audio playback may fail");
+#endif
                                                     }
                                                     _audioSampleDuration = rec.SampleDuration;
                                                 }
@@ -394,7 +466,9 @@ namespace FluorineFx.IO.M4a
                             //real duration
                             StringBuilder sb = new StringBuilder();
                             double clipTime = ((double)_duration / (double)_timeScale);
+#if LOGGING
                             log.Debug(string.Format("Clip time: {0}", clipTime));
+#endif
                             int minutes = (int)(clipTime / 60);
                             if (minutes > 0)
                             {
@@ -407,7 +481,9 @@ namespace FluorineFx.IO.M4a
                             //sb.append(df.format((clipTime % 60)));
                             sb.Append(clipTime % 60);
                             _formattedDuration = sb.ToString();
+#if LOGGING
                             log.Debug(string.Format("Time: {0}", _formattedDuration));
+#endif
                             break;
                         case 1835295092: //mdat
                             topAtoms++;
@@ -416,24 +492,32 @@ namespace FluorineFx.IO.M4a
                             dataSize = mdat.Size;
                             //log.debug("{}", ToStringBuilder.reflectionToString(mdat));
                             _mdatOffset = _inputStream.Offset - dataSize;
+#if LOGGING
                             log.Debug(string.Format("File size: {0} mdat size: {1}", _file.Length, dataSize));
+#endif
                             break;
                         case 1718773093: //free
                         case 2003395685: //wide
                             break;
                         default:
+#if LOGGING
                             log.Warn(string.Format("Unexpected atom: {}", Mp4Atom.IntToType(atom.Type)));
+#endif
                             break;
                     }
                 }
                 //add the tag name (size) to the offsets
                 _moovOffset += 8;
                 _mdatOffset += 8;
+#if LOGGING
                 log.Debug(string.Format("Offsets moov: {0} mdat: {1}", _moovOffset, _mdatOffset));
+#endif
             }
             catch (Exception ex)
             {
+#if LOGGING
                 log.Error("Exception decoding header / atoms", ex);
+#endif
             }
         }
 
@@ -472,7 +556,9 @@ namespace FluorineFx.IO.M4a
 
                 //get the current frame
                 Mp4Frame frame = _frames[_currentFrame];
+#if LOGGING
                 log.Debug(string.Format("Playback #{0} {1}", _currentFrame, frame));
+#endif
 
                 int sampleSize = frame.Size;
 
@@ -496,7 +582,9 @@ namespace FluorineFx.IO.M4a
                 }
                 catch (Exception ex)
                 {
+#if LOGGING
                     log.Error("Error on channel position / read", ex);
+#endif
                 }
 
                 //create the tag
@@ -520,7 +608,7 @@ namespace FluorineFx.IO.M4a
             return false;
         }
 
-        #endregion
+#endregion
 
         public void SetAudioCodecId(String audioCodecId)
         {
@@ -546,7 +634,9 @@ namespace FluorineFx.IO.M4a
         /// </summary>
         private void CreatePreStreamingTags()
         {
+#if LOGGING
             log.Debug("Creating pre-streaming tags");
+#endif
             ByteBuffer body = ByteBuffer.Allocate(41);
             body.AutoExpand = true;
             body.Put(new byte[] { (byte)0xaf, (byte)0 }); //prefix
@@ -571,7 +661,9 @@ namespace FluorineFx.IO.M4a
         /// <returns></returns>
         ITag CreateFileMeta()
         {
+#if LOGGING
             log.Debug("Creating onMetaData");
+#endif
             // Create tag for onMetaData event
             ByteBuffer buf = ByteBuffer.Allocate(1024);
             buf.AutoExpand = true;
@@ -607,7 +699,9 @@ namespace FluorineFx.IO.M4a
         /// </summary>
         public void AnalyzeFrames()
         {
+#if LOGGING
             log.Debug("Analyzing frames");
+#endif
             // tag == sample
             int sample = 1;
             long pos = 0;
@@ -651,7 +745,9 @@ namespace FluorineFx.IO.M4a
             //sort the frames
             _frames.Sort();
 
+#if LOGGING
             log.Debug(string.Format("Frames count: {0}", _frames.Count));
+#endif
         }
     }
 }

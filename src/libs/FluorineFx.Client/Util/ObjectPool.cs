@@ -19,7 +19,7 @@
 using System;
 using System.Collections.Generic;
 using FluorineFx.Threading;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 using log4net;
 #endif
 
@@ -30,7 +30,7 @@ namespace FluorineFx.Util
     /// </summary>
     public class ObjectPool<T> : DisposableBase
     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
         private static readonly ILog Log = LogManager.GetLogger(typeof(ObjectPool<>));
 #endif
         private readonly int _capacity;
@@ -117,7 +117,7 @@ namespace FluorineFx.Util
         /// <param name="count">The number of elements reserved in the object pool.</param>
         private void AddObjects(int count)
         {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             Log.Debug(string.Format("ObjectPool creating {0} pooled objects", count));
 #endif
             if (_forceGC)

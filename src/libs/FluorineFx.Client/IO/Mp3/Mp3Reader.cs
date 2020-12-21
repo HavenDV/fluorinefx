@@ -22,7 +22,9 @@ using System.Collections;
 using System.Collections.Generic;
 #endif
 using System.IO;
+#if LOGGING
 using log4net;
+#endif
 using FluorineFx.Util;
 using FluorineFx.IO;
 
@@ -30,7 +32,9 @@ namespace FluorineFx.IO.Mp3
 {
     class Mp3Reader : ITagReader, IKeyFrameDataAnalyzer
     {
+#if LOGGING
         private static readonly ILog log = LogManager.GetLogger(typeof(Mp3Reader));
+#endif
         object _syncLock = new object();
 
         private FileInfo _file;
@@ -108,7 +112,7 @@ namespace FluorineFx.IO.Mp3
             }
         }
 
-        #region ITagReader Members
+#region ITagReader Members
 
         public IStreamableFile File
         {
@@ -177,7 +181,9 @@ namespace FluorineFx.IO.Mp3
                 }
                 catch (IOException ex)
                 {
+#if LOGGING
                     log.Error("MP3Reader HasMoreTags", ex);
+#endif
                     break;
                 }
                 catch (Exception)
@@ -292,9 +298,9 @@ namespace FluorineFx.IO.Mp3
             return false;
         }
 
-        #endregion
+#endregion
 
-        #region IKeyFrameDataAnalyzer Members
+#region IKeyFrameDataAnalyzer Members
 
         public KeyFrameMeta AnalyzeKeyFrames()
         {
@@ -373,7 +379,7 @@ namespace FluorineFx.IO.Mp3
             }
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Check if the file can be played back with Flash. Supported sample rates are 44KHz, 22KHz, 11KHz and 5.5KHz
@@ -454,7 +460,9 @@ namespace FluorineFx.IO.Mp3
                 }
                 catch (IOException ex)
                 {
+#if LOGGING
                     log.Error("MP3Reader ReadTag", ex);
+#endif
                     break;
                 }
                 catch (Exception)

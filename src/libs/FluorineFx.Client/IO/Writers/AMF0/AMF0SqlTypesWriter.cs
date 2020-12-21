@@ -20,8 +20,9 @@ using System;
 using System.Data;
 using System.Data.SqlTypes;
 using System.Collections;
-
+#if LOGGING
 using log4net;
+#endif
 using FluorineFx.Exceptions;
 
 namespace FluorineFx.IO.Writers
@@ -31,13 +32,15 @@ namespace FluorineFx.IO.Writers
 	/// </summary>
 	class AMF0SqlTypesWriter : IAMFWriter
 	{
+#if LOGGING
 		private static readonly ILog _log = LogManager.GetLogger(typeof(AMF0SqlTypesWriter));
+#endif
 
 		public AMF0SqlTypesWriter()
 		{
 		}
 
-		#region IAMFWriter Members
+#region IAMFWriter Members
 
 		public bool IsPrimitive{ get{ return true; } }
 
@@ -112,11 +115,13 @@ namespace FluorineFx.IO.Writers
 				return;
 			}
 			string msg = string.Format("Could not find serializer for type {0}", data.GetType().FullName);
+#if LOGGING
 			if (_log.IsErrorEnabled)
 				_log.Error(msg);
+#endif
 			throw new FluorineException(msg);
 		}
 
-		#endregion
+#endregion
 	}
 }

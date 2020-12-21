@@ -19,7 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 using log4net;
 #endif
 using FluorineFx.Util;
@@ -32,7 +32,7 @@ namespace FluorineFx.IO.FLV
     /// </summary>
     class FlvReader : ITagReader, IKeyFrameDataAnalyzer
     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
         private static readonly ILog log = LogManager.GetLogger(typeof(FlvReader));
 #endif
         object _syncLock = new object();
@@ -174,7 +174,7 @@ namespace FluorineFx.IO.FLV
             _header.Version = _reader.ReadByte();
             _header.SetTypeFlags(_reader.ReadByte());
             _header.DataOffset = _reader.ReadInt32();
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 		    if (log.IsDebugEnabled) 
             {
 			    log.Debug("Flv header: " + _header.ToString());
@@ -331,7 +331,7 @@ namespace FluorineFx.IO.FLV
                     long newPosition = pos + tmpTag.BodySize + 15;
                     if (newPosition >= GetTotalBytes())
                     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                         log.Info("New position exceeds limit");
                         if (log.IsDebugEnabled)
                         {

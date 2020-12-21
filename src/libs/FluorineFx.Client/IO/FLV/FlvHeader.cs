@@ -19,7 +19,7 @@
 using System;
 using System.Collections;
 using System.IO;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 using log4net;
 #endif
 

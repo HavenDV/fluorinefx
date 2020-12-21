@@ -24,8 +24,9 @@ using System.Reflection.Emit;
 using System.Security;
 using System.Security.Permissions;
 using FluorineFx.Reflection.Lightweight;
+#if LOGGING
 using log4net;
-
+#endif
 using FluorineFx.AMF3;
 using FluorineFx.Configuration;
 using FluorineFx.Exceptions;
@@ -38,8 +39,9 @@ namespace FluorineFx.IO.Bytecode.Lightweight
 	/// </summary>
     class AMF3ReflectionOptimizer : IReflectionOptimizer
 	{
+#if LOGGING
         private static readonly ILog log = LogManager.GetLogger(typeof(AMF3ReflectionOptimizer));
-
+#endif
         CreateInstanceInvoker _createInstanceMethod;
         ReadDataInvoker _readDataMethod;
         ClassDefinition _classDefinition;
@@ -123,9 +125,13 @@ namespace FluorineFx.IO.Bytecode.Lightweight
                 else
                 {
                     //Log this error (do not throw exception), otherwise our current AMF stream becomes unreliable
+#if LOGGING
                     log.Warn(__Res.GetString(__Res.Optimizer_Warning));
+#endif
                     string msg = __Res.GetString(__Res.Reflection_MemberNotFound, string.Format("{0}.{1}", type.FullName, key));
+#if LOGGING
                     log.Warn(msg);
+#endif
                     //reader.ReadAMF3Data(typeCode);
                     emit
                         .ldarg_0 //Push 'reader'
@@ -187,7 +193,7 @@ namespace FluorineFx.IO.Bytecode.Lightweight
                     case TypeCode.Single:
                     case TypeCode.Double:
                         {
-                            #region Primitive numeric
+#region Primitive numeric
                             Label labelCheckInt = emit.ILGenerator.DefineLabel();
                             Label labelNotNumber = emit.ILGenerator.DefineLabel();
                             Label labelExit = emit.ILGenerator.DefineLabel();
@@ -240,12 +246,12 @@ namespace FluorineFx.IO.Bytecode.Lightweight
                                     .end()
                                 ;
                             }
-                            #endregion Primitive numeric
+#endregion Primitive numeric
                         }
                         break;
                     case TypeCode.Boolean:
                         {
-                            #region Primitive boolean
+#region Primitive boolean
                             Label labelCheckBooleanTrue = emit.ILGenerator.DefineLabel();
                             Label labelNotBoolean = emit.ILGenerator.DefineLabel();
                             Label labelExit = emit.ILGenerator.DefineLabel();
@@ -294,12 +300,12 @@ namespace FluorineFx.IO.Bytecode.Lightweight
                                     .end()
                                 ;
                             }
-                            #endregion Primitive boolean
+#endregion Primitive boolean
                         }
                         break;
                     case TypeCode.Char:
                         {
-                            #region Primitive Char
+#region Primitive Char
                             {
                                 Label labelNotString = emit.ILGenerator.DefineLabel();
                                 Label labelExit = emit.ILGenerator.DefineLabel();
@@ -349,7 +355,7 @@ namespace FluorineFx.IO.Bytecode.Lightweight
                                     ;
                                 }
                             }
-                            #endregion Primitive Char
+#endregion Primitive Char
                         }
                         break;
                 }
@@ -357,7 +363,7 @@ namespace FluorineFx.IO.Bytecode.Lightweight
             }
             if (memberType.IsEnum)
             {
-                #region Enum
+#region Enum
                 Label labelNotInteger = emit.ILGenerator.DefineLabel();
                 Label labelNotString = emit.ILGenerator.DefineLabel();
                 Label labelExit = emit.ILGenerator.DefineLabel();
@@ -417,11 +423,11 @@ namespace FluorineFx.IO.Bytecode.Lightweight
                     ;
                 }
                 return;
-                #endregion Enum
+#endregion Enum
             }
             if (memberType == typeof(DateTime))
             {
-                #region DateTime
+#region DateTime
                 Label labelNotDate = emit.ILGenerator.DefineLabel();
                 Label labelExit = emit.ILGenerator.DefineLabel();
                 //if( typeCode == AMF3TypeCode.DateTime )
@@ -459,11 +465,11 @@ namespace FluorineFx.IO.Bytecode.Lightweight
                     ;
                 }
                 return;
-                #endregion DateTime
+#endregion DateTime
             }
             if (memberType == typeof(Guid))
             {
-                #region Guid
+#region Guid
                 Label labelNotString = emit.ILGenerator.DefineLabel();
                 Label labelExit = emit.ILGenerator.DefineLabel();
                 emit
@@ -502,7 +508,7 @@ namespace FluorineFx.IO.Bytecode.Lightweight
                     ;
                 }
                 return;
-                #endregion Guid
+#endregion Guid
             }
             if (memberType.IsValueType)
             {
@@ -511,7 +517,7 @@ namespace FluorineFx.IO.Bytecode.Lightweight
             }
             if (memberType == typeof(string))
             {
-                #region String
+#region String
 
                 Label labelCheckNull = emit.ILGenerator.DefineLabel();
                 Label labelCheckUndefined = emit.ILGenerator.DefineLabel();
@@ -572,7 +578,7 @@ namespace FluorineFx.IO.Bytecode.Lightweight
                 }
                 return;
 
-                #endregion String
+#endregion String
             }
             //instance.member = (type)TypeHelper.ChangeType(reader.ReadAMF3Data(typeCode), typeof(member));
             emit
@@ -589,7 +595,7 @@ namespace FluorineFx.IO.Bytecode.Lightweight
             ;
         }
 
-        #region IReflectionOptimizer Members
+#region IReflectionOptimizer Members
 
         public object CreateInstance()
         {
@@ -601,6 +607,6 @@ namespace FluorineFx.IO.Bytecode.Lightweight
             return _readDataMethod(reader, classDefinition);
         }
 
-        #endregion
+#endregion
     }
 }

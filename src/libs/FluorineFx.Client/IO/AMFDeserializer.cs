@@ -23,7 +23,7 @@ using System.IO;
 #if !(NET_1_1)
 using System.Collections.Generic;
 #endif
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 using log4net;
 #endif
 using FluorineFx.Configuration;
@@ -35,7 +35,7 @@ namespace FluorineFx.IO
 	/// </summary>
 	public class AMFDeserializer : AMFReader
 	{
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
         private static readonly ILog log = LogManager.GetLogger(typeof(AMFDeserializer));
 #endif
 #if !(NET_1_1)
@@ -110,7 +110,7 @@ namespace FluorineFx.IO
                 {
                     ErrorResponseBody errorResponseBody = GetErrorBody(amfBody, exception);
                     _failedAMFBodies.Add(errorResponseBody);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                     if (log.IsFatalEnabled)
                         log.Fatal(__Res.GetString(__Res.Amf_ReadBodyFail), exception);
 #endif
@@ -124,7 +124,7 @@ namespace FluorineFx.IO
                 AMFBody amfBody = new AMFBody(target, response, null);
                 ErrorResponseBody errorResponseBody = GetErrorBody(amfBody, exception);
                 _failedAMFBodies.Add(errorResponseBody);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                 if (log.IsFatalEnabled)
                     log.Fatal(__Res.GetString(__Res.Amf_ReadBodyFail), exception);
 #endif

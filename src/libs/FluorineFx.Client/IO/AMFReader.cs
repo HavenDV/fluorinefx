@@ -29,7 +29,7 @@ using System.Collections.Generic;
 #endif
 #if SILVERLIGHT
 using System.Xml.Linq;
-#else
+#elif LOGGING
 using log4net;
 #endif
 using FluorineFx.Exceptions;
@@ -45,11 +45,11 @@ namespace FluorineFx.IO
 	/// </summary>
 	public class AMFReader : BinaryReader
 	{
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
         private static readonly ILog log = LogManager.GetLogger(typeof(AMFReader));
 #endif
 
-		bool _useLegacyCollection = true;
+        bool _useLegacyCollection = true;
         bool _faultTolerancy = false;
         Exception _lastError;
 
@@ -324,12 +324,12 @@ namespace FluorineFx.IO
 		{
 			string typeIdentifier = ReadString();
 
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             if(log.IsDebugEnabled )
 				log.Debug(__Res.GetString(__Res.TypeIdentifier_Loaded, typeIdentifier));
 #endif
 
-			Type type = ObjectFactory.Locate(typeIdentifier);
+            Type type = ObjectFactory.Locate(typeIdentifier);
 			if( type != null )
 			{
 				object instance = ObjectFactory.CreateInstance(type);
@@ -346,12 +346,12 @@ namespace FluorineFx.IO
 			}
 			else
 			{
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                 if( log.IsWarnEnabled )
 					log.Warn(__Res.GetString(__Res.TypeLoad_ASO, typeIdentifier));
 #endif
 
-				ASObject asObject;
+                ASObject asObject;
 				//Reference added in ReadASObject
                 asObject = ReadASObject();
 				asObject.TypeName = typeIdentifier;
@@ -969,7 +969,7 @@ namespace FluorineFx.IO
 				//A reference to a previously passed class-def
 				classDefinition = ReadClassReference(handle);
 			}
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
             if (log.IsDebugEnabled)
 			{
 				if (classDefinition.IsTypedObject)
@@ -978,7 +978,7 @@ namespace FluorineFx.IO
 					log.Debug(__Res.GetString(__Res.ClassDefinition_LoadedUntyped));
 			}
 #endif
-			return classDefinition;
+            return classDefinition;
 		}
 
         internal object ReadAMF3Object(ClassDefinition classDefinition)
@@ -990,7 +990,7 @@ namespace FluorineFx.IO
                 instance = new ASObject();
             if (instance == null)
             {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                 if (log.IsWarnEnabled)
                     log.Warn(__Res.GetString(__Res.TypeLoad_ASO, classDefinition.ClassName));
 #endif
@@ -1086,11 +1086,11 @@ namespace FluorineFx.IO
                         else
                         {
                             string msg = __Res.GetString(__Res.Reflection_PropertyIndexFail, string.Format("{0}.{1}", type.FullName, memberName));
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                             if (log.IsErrorEnabled)
                                 log.Error(msg);
 #endif
-                            if( !_faultTolerancy )
+                            if ( !_faultTolerancy )
                                 throw new FluorineException(msg);
                             else
                                 _lastError = new FluorineException(msg);
@@ -1100,7 +1100,7 @@ namespace FluorineFx.IO
                     else
                     {
                         string msg = __Res.GetString(__Res.Reflection_PropertyReadOnly, string.Format("{0}.{1}", type.FullName, memberName));
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                         if (log.IsWarnEnabled)
                             log.Warn(msg);
 #endif
@@ -1109,7 +1109,7 @@ namespace FluorineFx.IO
                 catch (Exception ex)
                 {
                     string msg = __Res.GetString(__Res.Reflection_PropertySetFail, string.Format("{0}.{1}", type.FullName, memberName), ex.Message);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                     if (log.IsErrorEnabled)
                         log.Error(msg, ex);
 #endif
@@ -1132,7 +1132,7 @@ namespace FluorineFx.IO
                     else
                     {
                         string msg = __Res.GetString(__Res.Reflection_MemberNotFound, string.Format("{0}.{1}", type.FullName, memberName));
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                         if (log.IsWarnEnabled)
                             log.Warn(msg);
 #endif
@@ -1141,7 +1141,7 @@ namespace FluorineFx.IO
                 catch (Exception ex)
                 {
                     string msg = __Res.GetString(__Res.Reflection_FieldSetFail, string.Format("{0}.{1}", type.FullName, memberName), ex.Message);
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                     if (log.IsErrorEnabled)
                         log.Error(msg, ex);
 #endif

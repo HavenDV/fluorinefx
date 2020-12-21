@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 //using System.Web;
 //using System.Web.Caching;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 using log4net;
 #endif
 using FluorineFx.Util;
@@ -31,7 +31,7 @@ namespace FluorineFx.IO.FLV
 {
     class Flv : IFlv
     {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
         private static readonly ILog log = LogManager.GetLogger(typeof(Flv));
 #endif
         private FileInfo _file;
@@ -69,7 +69,7 @@ namespace FluorineFx.IO.FLV
                 }
                 catch (Exception ex)
                 {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                     log.Error("An error occured looking for metadata:", ex);
 #endif
                 }
@@ -153,7 +153,7 @@ namespace FluorineFx.IO.FLV
 
             if (_file.Exists)
             {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                 if (log.IsDebugEnabled)
                     log.Debug("File size: " + _file.Length);
 #endif
@@ -161,7 +161,7 @@ namespace FluorineFx.IO.FLV
             }
             else
             {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                 log.Info("Creating new file: " + fileName);
 #endif
                 using (FileStream fs = _file.Create()){}
@@ -186,7 +186,7 @@ namespace FluorineFx.IO.FLV
             // If the file doesnt exist, we cant append to it, so return a writer
             if (!_file.Exists)
             {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                 log.Info("File does not exist, calling writer. This will create a new file.");
 #endif
                 return GetWriter();

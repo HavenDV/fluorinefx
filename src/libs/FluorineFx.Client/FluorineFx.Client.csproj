@@ -3,39 +3,47 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net4.0;net4.5</TargetFrameworks>
     <DefineConstants>$(DefineConstants);FXCLIENT</DefineConstants>
+    <Logging>false</Logging>
+    <DefineConstants Condition="'$(Logging)'">$(DefineConstants);LOGGING</DefineConstants>
+    <NoWarn Condition=" '$(Logging)' == 'false' ">$(NoWarn);CS0168</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Label="Nuget">
-    <Version>1.2.9</Version>
+    <Version>1.3.0</Version>
     <Description>fluorinefx Client with .Net Standard 2.0 support</Description>
     <PackageTags>fluorinefx, netcore, net5, netstandard</PackageTags>
     <PackageReleaseNotes>
       Added netstandard2.0 target.
+      Deleted logging from release version.
     </PackageReleaseNotes>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(Logging)'">
     <PackageReference Include="log4net" Version="2.0.12" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" />
     <PackageReference Include="System.CodeDom" Version="5.0.0" />
+    <PackageReference Include="System.Security.Permissions" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
     <PackageReference Include="System.CodeDom" Version="5.0.0" />
+    <PackageReference Include="System.Security.Permissions" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net4.0' ">
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Messaging" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Services" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net4.5' ">
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Messaging" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Services" />
   </ItemGroup>
 

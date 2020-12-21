@@ -23,7 +23,7 @@ using System.Reflection;
 using System.Text;
 using System.Security;
 using System.Security.Permissions;
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
 using log4net;
 #endif
 using FluorineFx.Exceptions;
@@ -35,18 +35,18 @@ namespace FluorineFx
 	/// </summary>
 	public static class MethodHandler
 	{
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
         private static readonly ILog Log = LogManager.GetLogger(typeof(MethodHandler));
 #endif
 
-	    /// <summary>
+        /// <summary>
         /// This method supports the Fluorine infrastructure and is not intended to be used directly from your code.
         /// </summary>
         /// <param name="type"></param>
         /// <param name="methodName"></param>
         /// <param name="arguments"></param>
         /// <returns></returns>
-		public static MethodInfo GetMethod(Type type, string methodName, IList arguments)
+        public static MethodInfo GetMethod(Type type, string methodName, IList arguments)
 		{
 			return GetMethod(type, methodName, arguments, false);
 		}
@@ -140,7 +140,7 @@ namespace FluorineFx
                 string msg = __Res.GetString(__Res.Invocation_NoSuitableMethod, methodName, type.Name);
                 if (traceError)
                 {
-#if !SILVERLIGHT
+#if LOGGING && !SILVERLIGHT
                     if (Log.IsErrorEnabled)
                     {
                         //Trace the issue
@@ -231,7 +231,7 @@ namespace FluorineFx
                     }
 #endif
                 }
-				if( throwException )
+                if ( throwException )
 					throw new FluorineException(msg);
 			}
 			if( suitableMethodInfos.Count > 1 )
