@@ -7,7 +7,7 @@ jobs:
       matrix:
         dotnet: [ '5.0.x' ]
         os: [ windows-latest ]
-        
+
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os }} - ${{ matrix.dotnet }}
     env:
@@ -24,7 +24,10 @@ jobs:
     
     - name: Build
       run: dotnet build --configuration Release --nologo
-
+    
+    - name: Run tests
+      run: dotnet test --configuration Release --nologo
+        
     - name: Publish
       run: dotnet nuget push
         src\**.nupkg

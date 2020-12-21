@@ -649,7 +649,13 @@ namespace FluorineFx.Reflection.Lightweight
 		/// <seealso cref="System.Reflection.Emit.ILGenerator.EmitCalli(OpCode,CallingConvention,Type,Type[])">ILGenerator.EmitCalli</seealso>
 		public EmitHelper calli(CallingConvention unmanagedCallConv, Type returnType, Type[] parameterTypes)
 		{
-			_ilGenerator.EmitCalli(OpCodes.Calli, unmanagedCallConv, returnType, parameterTypes); return this;
+#if NETSTANDARD2_0
+			_ilGenerator.EmitCalli(OpCodes.Calli, CallingConventions.Standard, returnType, parameterTypes, null);
+#else
+			_ilGenerator.EmitCalli(OpCodes.Calli, unmanagedCallConv, returnType, parameterTypes);
+#endif
+            
+			return this;
 		}
 
 		/// <summary>
