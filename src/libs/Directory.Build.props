@@ -22,13 +22,12 @@
     <PackageProjectUrl>https://github.com/HavenDV/fluorinefx</PackageProjectUrl>
     <RepositoryUrl>https://github.com/HavenDV/fluorinefx</RepositoryUrl>
     <PackageIcon>nuget_icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup Label="Nuget">
-    <None Include="$(SolutionDir)\docs\nuget_icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <None Include="$(SolutionDir)assets\nuget_icon.png" Pack="true" PackagePath=""/>
+    <None Include="$(SolutionDir)README.md" Pack="true" PackagePath=""/>
   </ItemGroup>
 
   <PropertyGroup Label="Source Link">
@@ -39,10 +38,16 @@
   </PropertyGroup>
 
   <ItemGroup Label="Source Link">
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+
+  <!--<PropertyGroup Label="Analyzers">
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+  </PropertyGroup>-->
 
 </Project>
