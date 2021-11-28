@@ -311,7 +311,7 @@ namespace FluorineFx
 		{
 			if (_resMgr == null)
 			{
-                _resMgr = new ResourceManager("FluorineFx.Resources.Resource", typeof(__Res).Assembly);
+                _resMgr = new ResourceManager("FluorineFx.Client.Resources.Resource", typeof(__Res).Assembly);
 			}
 			string text = _resMgr.GetString(key);
 			if (text == null)
