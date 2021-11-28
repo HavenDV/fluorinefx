@@ -9,14 +9,8 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Nuget">
-    <Version>1.3.2</Version>
     <Description>fluorinefx Client with .Net Standard 2.0 support</Description>
-    <PackageTags>fluorinefx, netcore, net5, netstandard</PackageTags>
-    <PackageReleaseNotes>
-      Added netstandard2.0 target.
-      Deleted logging from release version.
-      Added Source Link.
-    </PackageReleaseNotes>
+    <PackageTags>fluorinefx, netcore, net5, net6, netstandard, client, flash, remoting</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
