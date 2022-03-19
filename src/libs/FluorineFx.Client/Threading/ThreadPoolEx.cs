@@ -441,8 +441,10 @@ namespace FluorineFx.Threading
 			} 
 			catch(ThreadAbortException)
 			{
+#if !NET5_0_OR_GREATER
 				// Handle the abort exception gracfully.
 				Thread.ResetAbort();
+#endif
 			}
 			catch(Exception)
 			{
@@ -544,7 +546,7 @@ namespace FluorineFx.Threading
 					{
 						try 
 						{
-#if !NET5_0
+#if !NET5_0_OR_GREATER
 							thread.Abort("Shutdown");
 #endif
 						}

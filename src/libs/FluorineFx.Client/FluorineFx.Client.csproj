@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net4.5.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net4.5.1;net5.0;net6.0</TargetFrameworks>
     <DefineConstants>$(DefineConstants);FXCLIENT</DefineConstants>
     <Logging>false</Logging>
     <DefineConstants Condition="'$(Logging)'">$(DefineConstants);LOGGING</DefineConstants>
     <NoWarn Condition=" '$(Logging)' == 'false' ">$(NoWarn);CS0168</NoWarn>
+    <NoWarn>$(NoWarn);SYSLIB0003</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Label="Nuget">
@@ -14,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Using Remove="System.Net.Http"/>
+    <Using Remove="System.Net.Http" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(Logging)'">
@@ -28,6 +29,16 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="System.CodeDom" Version="6.0.0" />
+    <PackageReference Include="System.Security.Permissions" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+    <PackageReference Include="System.CodeDom" Version="6.0.0" />
+    <PackageReference Include="System.Security.Permissions" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
     <PackageReference Include="System.CodeDom" Version="6.0.0" />
     <PackageReference Include="System.Security.Permissions" Version="6.0.0" />
   </ItemGroup>

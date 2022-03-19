@@ -12010,23 +12010,35 @@ namespace FluorineFx.Util
         /// <param name="value">A character array.</param>
         /// <returns>The equivalent Type.</returns>
         public static Type ToType(Char[] value) { return value == null ? null : Type.GetType(new string(value)); }
-#if! SILVERLIGHT
+#if !SILVERLIGHT
         /// <summary>
         /// Gets the type associated with the specified CLSID identifier.
         /// </summary>
         /// <param name="value">CLSID identifier.</param>
         /// <returns>The associated Type.</returns>
+#if NET5_0_OR_GREATER
+    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#elif NETSTANDARD2_0_OR_GREATER || NET451_OR_GREATER
+#else
+#error Target Framework is not supported
+#endif
         public static Type ToType(Guid value) { return value == Guid.Empty ? null : Type.GetTypeFromCLSID(value); }
 #endif
 
 #if !(NET_1_1)
         // Nullable Types.
-#if! SILVERLIGHT
+#if !SILVERLIGHT
         /// <summary>
         /// Gets the type associated with the specified CLSID identifier.
         /// </summary>
         /// <param name="value">CLSID identifier.</param>
         /// <returns>The associated Type.</returns>
+#if NET5_0_OR_GREATER
+    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#elif NETSTANDARD2_0_OR_GREATER || NET451_OR_GREATER
+#else
+#error Target Framework is not supported
+#endif
         public static Type ToType(Guid? value) { return value.HasValue ? Type.GetTypeFromCLSID(value.Value) : null; }
 #endif
 #endif
@@ -12051,6 +12063,12 @@ namespace FluorineFx.Util
         /// </summary>
         /// <param name="value">An SqlGuid.</param>
         /// <returns>The equivalent Type.</returns>
+#if NET5_0_OR_GREATER
+    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#elif NETSTANDARD2_0_OR_GREATER || NET451_OR_GREATER
+#else
+#error Target Framework is not supported
+#endif
         public static Type ToType(SqlGuid value) { return value.IsNull ? null : Type.GetTypeFromCLSID(value.Value); }
 #endif
         /// <summary>
@@ -12058,6 +12076,12 @@ namespace FluorineFx.Util
         /// </summary>
         /// <param name="value">An Object.</param>
         /// <returns>The equivalent Type.</returns>
+#if NET5_0_OR_GREATER
+    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#elif NETSTANDARD2_0_OR_GREATER || NET451_OR_GREATER
+#else
+#error Target Framework is not supported
+#endif
         public static Type ToType(object value)
         {
             if (value == null || value is DBNull) return null;
