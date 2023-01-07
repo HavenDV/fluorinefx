@@ -12,8 +12,6 @@
     <Version>1.4.$(BUILD_NUMBER)</Version>
     <PackageReleaseNotes>$(PACKAGE_RELEASE_NOTES)</PackageReleaseNotes>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <Authors>Zoltan Csibi, zoltan@TheSilentGroup.com, FluorineFx.com</Authors>
     <Company>Zoltan Csibi, zoltan@TheSilentGroup.com, FluorineFx.com</Company>
     <Copyright>Zoltan Csibi, zoltan@TheSilentGroup.com, FluorineFx.com</Copyright>
