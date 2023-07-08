@@ -1,5 +1,5 @@
 # fluorinefx
-fluorinefx with .Net Core 3.1/.Net 5 support.
+fluorinefx with latest .NET support.
 
 ### Original repo message
 Source code belongs to http://www.fluorinefx.com/
