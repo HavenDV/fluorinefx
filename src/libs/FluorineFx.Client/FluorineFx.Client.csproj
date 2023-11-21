@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net4.6.2;net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net4.6.2;net6.0;net7.0;net8.0</TargetFrameworks>
     <DefineConstants>$(DefineConstants);FXCLIENT</DefineConstants>
     <Logging>false</Logging>
     <DefineConstants Condition="'$(Logging)'">$(DefineConstants);LOGGING</DefineConstants>
@@ -13,6 +13,10 @@
     <Description>fluorinefx Client with .Net Standard 2.0 support</Description>
     <PackageTags>fluorinefx, netcore, net5, net6, netstandard, client, flash, remoting</PackageTags>
   </PropertyGroup>
+  
+  <ItemGroup Label="Usings">
+    <Using Include="FluorineFx.Reflection.Lightweight.ConstructorInvoker" Alias="ConstructorInvoker" />
+  </ItemGroup>
 
   <ItemGroup>
     <Using Remove="System.Net.Http" />
@@ -39,6 +43,11 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+    <PackageReference Include="System.CodeDom" Version="8.0.0" />
+    <PackageReference Include="System.Security.Permissions" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
     <PackageReference Include="System.CodeDom" Version="8.0.0" />
     <PackageReference Include="System.Security.Permissions" Version="8.0.0" />
   </ItemGroup>
