@@ -61,7 +61,7 @@ namespace FluorineFx
             : base(dictionary)
         {
         }
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NET8_0_OR_GREATER
         /// <summary>
         /// Initializes a new instance of an ASObject object during deserialization.
         /// </summary>

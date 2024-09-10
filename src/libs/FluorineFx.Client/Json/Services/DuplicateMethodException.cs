@@ -34,6 +34,8 @@ namespace FluorineFx.Json.Services
         public DuplicateMethodException(string message, Exception innerException)
             :
             base(StringUtils.MaskNullString(message, _defaultMessage), innerException) { }
+        
+#if !NET8_0_OR_GREATER
         /// <summary>
         /// Initializes a new instance of the DuplicateMethodException class with serialized data.
         /// </summary>
@@ -42,5 +44,6 @@ namespace FluorineFx.Json.Services
         protected DuplicateMethodException(SerializationInfo info, StreamingContext context)
             :
             base(info, context) {}
+#endif
     }
 }

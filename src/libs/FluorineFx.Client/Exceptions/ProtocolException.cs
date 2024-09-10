@@ -52,7 +52,7 @@ namespace FluorineFx.Exceptions
 		public ProtocolException(string message, Exception inner) : base(message, inner)																 
 		{																 
 		}
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NET8_0_OR_GREATER
 		/// <summary>
 		/// Initializes a new instance of the ProtocolException class with serialized data.
 		/// </summary>
