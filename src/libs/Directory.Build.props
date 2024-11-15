@@ -8,9 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Nuget">
-    <BUILD_NUMBER Condition="'$(BUILD_NUMBER)' == ''">1</BUILD_NUMBER>
-    <Version>1.4.$(BUILD_NUMBER)</Version>
-    <PackageReleaseNotes>$(PACKAGE_RELEASE_NOTES)</PackageReleaseNotes>
+    <Version>1.5.0</Version>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <Authors>Zoltan Csibi, zoltan@TheSilentGroup.com, FluorineFx.com</Authors>
     <Company>Zoltan Csibi, zoltan@TheSilentGroup.com, FluorineFx.com</Company>
